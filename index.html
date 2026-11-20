@@ -65,7 +65,7 @@ a { color: inherit; }
 .chip { display: inline-flex; align-items: center; gap: 4px; border-radius: var(--r-pill); padding: 2px 9px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
 .chip-src { background: var(--grey); color: var(--black); font-weight: 600; }
 .t-Warm { background: var(--green); color: #fff; } .t-Cooling { background: var(--amber); color: #fff; } .t-Cold { background: var(--slate); color: #fff; } .t-Nodate { background: var(--grey-2); color: var(--muted); }
-.ps-Meetingbooked { background: var(--black); color: #fff; } .ps-Hot { background: var(--pink); color: var(--black); } .ps-Warm { background: var(--pink-soft); color: var(--black); box-shadow: inset 0 0 0 1px var(--pink-mid); } .ps-None { background: var(--grey); color: var(--muted); }
+.ps-Meetingbooked { background: var(--black); color: #fff; } .ps-Hot { background: var(--pink); color: var(--black); } .ps-Warm { background: var(--pink-soft); color: var(--black); box-shadow: inset 0 0 0 1px var(--pink-mid); } .ps-Cold { background: var(--slate); color: #fff; } .ps-None { background: var(--grey); color: var(--muted); }
 .type-Prospect { background: var(--pink-soft); color: var(--black); box-shadow: inset 0 0 0 1px var(--pink-mid); } .type-Client { background: var(--green-soft); color: #156b3f; box-shadow: inset 0 0 0 1px var(--green-mid); }
 .tier { display: inline-grid; place-items: center; width: 24px; height: 22px; border-radius: 6px; font-family: Poppins, system-ui, sans-serif; font-weight: 700; font-size: 12px; background: var(--green-soft); color: #156b3f; box-shadow: inset 0 0 0 1px var(--green-mid); }
 .tier.none { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
@@ -80,6 +80,7 @@ a { color: inherit; }
 .side { width: 240px; flex: none; background: var(--grey); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 18px 12px 12px; gap: 2px; overflow-y: auto; }
 .brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 18px; font-weight: 800; font-size: 19px; letter-spacing: -.2px; }
 .brand-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--pink); box-shadow: 0 0 0 4px var(--pink-mid); flex: none; }
+.beta { display: inline-block; vertical-align: middle; margin-left: 6px; background: var(--pink); color: var(--black); font-family: Poppins, system-ui, sans-serif; font-size: 9.5px; font-weight: 800; letter-spacing: 1.4px; line-height: 1; padding: 4px 7px 3px; border-radius: var(--r-pill); }
 .brand small { display: block; font-family: Nunito, system-ui, sans-serif; font-weight: 600; font-size: 11px; color: var(--muted); letter-spacing: 0; }
 .nav-group { display: flex; align-items: center; gap: 8px; margin: 14px 0 4px 10px; font-family: Poppins, system-ui, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
 .nav-group i { width: 8px; height: 8px; border-radius: 50%; }
@@ -254,7 +255,7 @@ details.co .tbl-wrap { border: 0; border-radius: 0; }
 /* ---- CONFIG: paste the Apps Script web app URL between the quotes ---- */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzF5sjSS2iCKAw3-5DBWZ6AeXRYfwSa22M8j1Dpe3pt7ndfYZ85IDNA7eim4R48jRXlwA/exec';
 /* ---------------------------------------------------------------------- */
-const APP_VERSION = '2.0.0';
+const APP_VERSION = '2.1.0';
 const POLL_MS = 20000;
 const THRESH = { A: [30, 90], B: [60, 150], C: [120, 365] };
 const FREE_MAIL = ['gmail.com', 'googlemail.com', 'hotmail.com', 'hotmail.co.uk', 'outlook.com', 'live.com', 'yahoo.com', 'yahoo.co.uk', 'icloud.com', 'me.com', 'aol.com', 'btinternet.com', 'proton.me', 'protonmail.com'];
@@ -348,7 +349,7 @@ const pschip = s => `<span class="chip ps-${(s || 'None').replace(' ', '')}">${e
 const typechip = c => (isProspect(c) ? '<span class="chip type-Prospect">Prospect</span>' : isClient(c) ? '<span class="chip type-Client">Client</span>' : '<span class="chip ps-None">To sort</span>');
 const tierTag = c => (tierOf(c) ? `<span class="tier">${tierOf(c)}</span>` : '<span class="tier none">-</span>');
 const liLink = c => (c.LinkedIn && /^https?:\/\//i.test(c.LinkedIn) ? `<a class="li" href="${esc(c.LinkedIn)}" target="_blank" rel="noopener noreferrer" title="Open LinkedIn" data-stop>in</a>` : '');
-const PS_COL = { 'Meeting booked': '#242424', Hot: '#FF50BE', Warm: '#FFC2E7', '': '#ECE9EA' };
+const PS_COL = { 'Meeting booked': '#242424', Hot: '#FF50BE', Warm: '#FFC2E7', Cold: '#5B6B8C', '': '#ECE9EA' };
 
 /* Today: Clients only, A and B tier, skips Leave For Now, top 10 */
 function queue() {
@@ -453,7 +454,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) poll
 function signedOut(msg) { S.token = ''; S.me = null; store.del('cr2_token'); closeDrawer(true); closeModal(); showLogin(msg); }
 function showLogin(msg) {
   $('#app').innerHTML = `<div class="login">
-    <div class="lg-left"><div class="brand"><span class="brand-dot"></span><span>Client Radar</span></div>
+    <div class="lg-left"><div class="brand"><span class="brand-dot"></span><span>Client Radar<span class="beta">BETA</span></span></div>
       <div class="lg-hero">Every relationship,<br>one <em>radar</em>.</div>
       <div class="lg-keys"><span style="background:var(--pink);color:var(--black)">Prospects</span><span style="background:var(--green);color:#fff">Clients</span></div></div>
     <div class="lg-right"><form class="lg-form" id="lgForm" autocomplete="on">
@@ -516,7 +517,7 @@ function renderShell() {
   const item = (v, cnt) => `<button class="nav-item ${VIEWS[v].a}" data-go="${v}">${esc(VIEWS[v].t)}${cnt != null ? `<span class="n" data-count="${v}">${cnt}</span>` : ''}</button>`;
   $('#app').innerHTML = `
     <nav class="side">
-      <div class="brand"><span class="brand-dot"></span><span>Client Radar<small>Sunday Treat</small></span></div>
+      <div class="brand"><span class="brand-dot"></span><span>Client Radar<span class="beta">BETA</span><small>Sunday Treat</small></span></div>
       <div class="nav-group p"><i></i>Prospects</div>${item('prospects', 0)}
       <div class="nav-group c"><i></i>Clients</div>${item('today', 0)}${item('everyone', 0)}${item('companies')}${item('testimonials')}
       <div class="nav-group n"><i></i>Tools</div>${item('sort', 0)}${item('meetings', 0)}${item('add')}${item('archive')}
@@ -528,7 +529,7 @@ function renderShell() {
       </div>
     </nav>
     <div class="main">
-      <div class="topbar"><span class="mob-brand"><span class="brand-dot"></span>Client Radar</span><h1 id="pageTitle"></h1><span class="sync" id="sync"></span></div>
+      <div class="topbar"><span class="mob-brand"><span class="brand-dot"></span>Client Radar<span class="beta">BETA</span></span><h1 id="pageTitle"></h1><span class="sync" id="sync"></span></div>
       <div class="content" id="content"></div>
     </div>${codeList()}`;
   setSync(S.sync);
@@ -572,7 +573,7 @@ function vProspects() {
       <div class="k-meta">${c['Lead source'] ? `<span class="chip chip-src">${esc(c['Lead source'])}</span>` : ''}<span class="muted">${n == null ? 'No contact logged' : 'Last contact ' + ago(n) + (n > 1 ? ' ago' : '')}</span></div>
       <div class="k-acts">${liLink(c)}<select class="sel" data-pstat="${esc(c.ID)}" data-stop title="Change status">${opts(S.lists.prospectStatus, c['Prospect status'] || '', 'No status yet')}</select></div></div>`;
   };
-  return band('Prospects', 'Prospects', 'People we have not worked with yet. Hot, warm, or a meeting already in the diary.', note) +
+  return band('Prospects', 'Prospects', 'People we have not worked with yet. A meeting in the diary, hot, warm or gone cold.', note) +
     `<div class="toolbar"><div class="search"><input class="inp" placeholder="Search prospects" value="${esc(f.q || '')}" data-pf="q"></div>
       <select class="sel sel-sm" data-pf="owner">${opts([['_none', 'No owner']].concat(owners().map(p => [p.id, p.name])), f.owner, 'Any owner')}</select>
       <select class="sel sel-sm" data-pf="lead">${opts(S.lists.leadSources, f.lead, 'Any lead source')}</select>
