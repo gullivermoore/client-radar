@@ -2,220 +2,382 @@
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
 <title>Client Radar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --pink: #FF50BE; --ink: #141414; --muted: #6b6b6b; --line: #e6e6e6; --bg: #fafafa; --card: #fff;
-    --warm: #FF50BE; --cool: #E8A33D; --cold: #5B6B8C; --none: #b5b5b5;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; font-family: Nunito, system-ui, sans-serif; color: var(--ink); background: var(--bg); font-size: 15px; }
-  h1, h2, h3, .brand, button, .tab { font-family: Poppins, system-ui, sans-serif; }
-  h2 { font-size: 20px; margin: 0 0 4px; }
-  h3 { font-size: 15px; margin: 18px 0 8px; }
-  .sub { color: var(--muted); margin: 0 0 16px; }
-  header { background: var(--ink); color: #fff; padding: 12px 20px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; }
-  .brand { font-weight: 700; font-size: 18px; }
-  .brand span { color: var(--pink); }
-  nav { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
-  .tab { background: none; border: 0; color: #ccc; padding: 7px 9px; border-radius: 999px; cursor: pointer; font-size: 13px; white-space: nowrap; }
-  .tab.on { background: #fff; color: var(--ink); }
-  .tab .n { background: var(--pink); color: #fff; border-radius: 999px; padding: 0 7px; margin-left: 4px; font-size: 12px; }
-  main { max-width: 1200px; margin: 0 auto; padding: 22px 20px 60px; }
-  button { cursor: pointer; border-radius: 8px; border: 1px solid var(--ink); background: #fff; color: var(--ink); padding: 6px 12px; font-size: 13px; font-weight: 500; transition: transform .08s ease; }
-  button:active { transform: scale(.95); }
-  button.primary { background: var(--ink); color: #fff; }
-  button.pink { background: var(--pink); border-color: var(--pink); color: #fff; }
-  button.ghost { border-color: var(--line); }
-  button:disabled { opacity: .5; cursor: default; }
-  input, select, textarea { font: inherit; padding: 7px 9px; border: 1px solid #ccc; border-radius: 8px; background: #fff; width: 100%; }
-  textarea { min-height: 70px; }
-  label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 3px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
-  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .grow { flex: 1; }
-  .chip { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; color: #fff; white-space: nowrap; }
-  .t-Warm { background: var(--warm); } .t-Cooling { background: var(--cool); } .t-Cold { background: var(--cold); } .t-No.date, .t-Nodate { background: var(--none); }
-  .tier { display: inline-block; width: 22px; text-align: center; border: 1.5px solid var(--ink); border-radius: 6px; font-weight: 700; font-size: 12px; }
-  .muted { color: var(--muted); }
-  .small { font-size: 13px; }
-  table { width: 100%; border-collapse: collapse; background: #fff; }
-  th { text-align: left; font-size: 12px; color: var(--muted); font-weight: 600; padding: 8px; border-bottom: 1px solid var(--line); position: sticky; top: 58px; background: #fff; }
-  td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  tr.click:hover td { background: #fff4fb; cursor: pointer; }
-  .queue-item { display: grid; grid-template-columns: 28px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--line); }
-  .queue-item:last-child { border-bottom: 0; }
-  .rank { font-family: Poppins; font-weight: 700; color: var(--pink); font-size: 18px; }
-  .name { font-weight: 700; cursor: pointer; }
-  .name:hover { text-decoration: underline; }
-  .move { margin-top: 4px; font-weight: 700; }
-  .grid { display: grid; grid-template-columns: 70px repeat(4, 1fr); gap: 6px; max-width: 640px; }
-  .grid div { padding: 10px; text-align: center; border-radius: 8px; }
-  .grid .hd { font-size: 12px; color: var(--muted); font-weight: 700; }
-  .grid .cell { background: #fff; border: 1px solid var(--line); cursor: pointer; font-family: Poppins; font-weight: 600; font-size: 18px; }
-  .grid .cell.sel { outline: 2px solid var(--pink); }
-  .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .col h3 { margin-top: 0; }
-  .mini { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin-bottom: 8px; }
-  .company { margin-bottom: 10px; }
-  .company summary { cursor: pointer; padding: 10px 0; display: flex; gap: 10px; align-items: center; list-style: none; }
-  #drawer { position: fixed; top: 0; right: 0; width: min(480px, 100%); height: 100%; background: #fff; border-left: 1px solid var(--line); box-shadow: -10px 0 30px rgba(0,0,0,.08); transform: translateX(105%); transition: transform .2s; z-index: 20; overflow-y: auto; padding: 20px; }
-  #drawer.open { transform: none; }
-  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .fields .full { grid-column: 1 / -1; }
-  .sources { background: var(--bg); border-radius: 10px; padding: 10px 12px; margin: 12px 0; }
-  .sources div { display: flex; justify-content: space-between; padding: 2px 0; }
-  .sources .best { font-weight: 700; }
-  #toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 9px 16px; border-radius: 999px; font-size: 14px; display: none; z-index: 30; }
-  #login { max-width: 420px; margin: 80px auto; }
-  .warn { background: #fff4fb; border: 1px solid var(--pink); border-radius: 10px; padding: 10px 12px; margin: 10px 0; }
-  .conote { font-size: 13px; color: var(--muted); cursor: pointer; margin-top: 2px; }
-  .conote::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--pink); margin-right: 7px; }
-  .conote:hover { color: var(--ink); text-decoration: underline; }
-  .hide { display: none !important; }
-  /* Rows slide away the moment you click, then collapse so the next row moves up smoothly */
-  .leaving { pointer-events: none; overflow: hidden; animation: leave .3s ease forwards; }
-  @keyframes leave {
-    0% { opacity: 1; transform: none; max-height: 240px; }
-    50% { opacity: 0; transform: translateX(28px); max-height: 240px; }
-    100% { opacity: 0; transform: translateX(28px); max-height: 0; padding-top: 0; padding-bottom: 0; border-bottom-width: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) { .leaving { animation-duration: .01s; } button { transition: none; } }
-  @media (max-width: 800px) { .cols { grid-template-columns: 1fr 1fr; } .fields { grid-template-columns: 1fr; } .queue-item { grid-template-columns: 22px 1fr; } .queue-item .acts { grid-column: 2; } }
+/* Client Radar 2.0. Sunday Treat brand: Hot Pink #FF50BE (never darker), Black #242424, White, Light grey #F6F4F5. Poppins for titles, Nunito for everything else.
+   Layout cues from BOARD: sidebar, flat 0.5px cards, pill buttons. Prospects are pink, Clients are green. */
+:root {
+  --pink: #FF50BE; --pink-soft: #FFE6F5; --pink-mid: #FFC2E7;
+  --green: #1F9D5C; --green-soft: #E3F4EA; --green-mid: #B9E3CB;
+  --black: #242424; --grey: #F6F4F5; --grey-2: #ECE9EA; --white: #FFFFFF;
+  --line: rgba(36,36,36,.14); --muted: #6E6A6C;
+  --amber: #D98A12; --slate: #5B6B8C; --red: #D33A3A;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-pill: 999px;
+  --a: var(--black); --a-soft: var(--grey); --a-mid: var(--grey-2); --a-ink: #fff;
+}
+[data-area="p"] { --a: var(--pink); --a-soft: var(--pink-soft); --a-mid: var(--pink-mid); --a-ink: var(--black); }
+[data-area="c"] { --a: var(--green); --a-soft: var(--green-soft); --a-mid: var(--green-mid); --a-ink: #fff; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body { font-family: Nunito, system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.45; color: var(--black); background: var(--white); -webkit-font-smoothing: antialiased; }
+h1, h2, h3, .brand, .btn, .nav-item, .lbl, .k-col-h, .tab { font-family: Poppins, system-ui, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+[hidden], .hide { display: none !important; }
+:focus-visible { outline: 2px solid var(--a); outline-offset: 2px; }
+
+/* ---------- buttons, inputs, chips ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: var(--r-pill); padding: 7px 15px; min-height: 34px; font-size: 12.5px; font-weight: 600; border: 1px solid transparent; background: transparent; white-space: nowrap; text-decoration: none; transition: background .12s, transform .08s; }
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--a); color: var(--a-ink); }
+.btn-primary:hover { filter: saturate(1.1); box-shadow: 0 0 0 3px var(--a-mid); }
+.btn-plain { background: var(--white); border-color: var(--line); }
+.btn-plain:hover { background: var(--grey); }
+.btn-soft { background: var(--a-soft); color: var(--black); }
+.btn-soft:hover { background: var(--a-mid); }
+.btn-pink { background: var(--pink); color: var(--black); }
+.btn-pink:hover { box-shadow: 0 0 0 3px var(--pink-mid); }
+.btn-green { background: var(--green); color: #fff; }
+.btn-green:hover { box-shadow: 0 0 0 3px var(--green-mid); }
+.btn-danger { border-color: var(--red); color: var(--red); background: var(--white); }
+.btn-sm { padding: 4px 11px; min-height: 28px; font-size: 11.5px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.inp, .sel, .txt { width: 100%; border: 1px solid var(--line); background: var(--white); border-radius: var(--r-md); padding: 8px 11px; min-height: 38px; font-size: 14px; }
+.txt { min-height: 90px; resize: vertical; }
+.inp:focus, .sel:focus, .txt:focus { outline: 2px solid var(--a); outline-offset: 0; border-color: transparent; }
+.sel { appearance: none; -webkit-appearance: none; padding-right: 30px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%236E6A6C' stroke-width='1.6'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 11px center; }
+.sel-sm, .inp-sm { min-height: 32px; padding: 4px 28px 4px 12px; font-size: 13px; border-radius: var(--r-pill); width: auto; }
+.inp-sm { padding-right: 12px; }
+.lbl { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin: 0 0 4px 2px; }
+.field { display: flex; flex-direction: column; min-width: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 12.5px; }
+.strong { font-weight: 700; }
+.row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.grow { flex: 1; min-width: 0; }
+.chip { display: inline-flex; align-items: center; gap: 4px; border-radius: var(--r-pill); padding: 2px 9px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+.chip-src { background: var(--grey); color: var(--black); font-weight: 600; }
+.t-Warm { background: var(--green); color: #fff; } .t-Cooling { background: var(--amber); color: #fff; } .t-Cold { background: var(--slate); color: #fff; } .t-Nodate { background: var(--grey-2); color: var(--muted); }
+.ps-Meetingbooked { background: var(--black); color: #fff; } .ps-Hot { background: var(--pink); color: var(--black); } .ps-Warm { background: var(--pink-soft); color: var(--black); box-shadow: inset 0 0 0 1px var(--pink-mid); } .ps-None { background: var(--grey); color: var(--muted); }
+.type-Prospect { background: var(--pink-soft); color: var(--black); box-shadow: inset 0 0 0 1px var(--pink-mid); } .type-Client { background: var(--green-soft); color: #156b3f; box-shadow: inset 0 0 0 1px var(--green-mid); }
+.tier { display: inline-grid; place-items: center; width: 24px; height: 22px; border-radius: 6px; font-family: Poppins, system-ui, sans-serif; font-weight: 700; font-size: 12px; background: var(--green-soft); color: #156b3f; box-shadow: inset 0 0 0 1px var(--green-mid); }
+.tier.none { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); }
+.av { --s: 26px; width: var(--s); height: var(--s); border-radius: 50%; display: inline-grid; place-items: center; flex: none; font-family: Poppins, system-ui, sans-serif; font-size: calc(var(--s) * .38); font-weight: 700; color: #fff; letter-spacing: .3px; }
+.av-lg { --s: 34px; }
+.av-none { background: transparent !important; color: var(--muted); box-shadow: inset 0 0 0 1.5px var(--line); }
+.li { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: #0A66C2; color: #fff; font-family: Poppins, system-ui, sans-serif; font-weight: 700; font-size: 11px; text-decoration: none; flex: none; }
+.li:hover { box-shadow: 0 0 0 3px rgba(10,102,194,.2); }
+
+/* ---------- layout ---------- */
+#app { position: fixed; inset: 0; display: flex; }
+.side { width: 240px; flex: none; background: var(--grey); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 18px 12px 12px; gap: 2px; overflow-y: auto; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 8px 18px; font-weight: 800; font-size: 19px; letter-spacing: -.2px; }
+.brand-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--pink); box-shadow: 0 0 0 4px var(--pink-mid); flex: none; }
+.brand small { display: block; font-family: Nunito, system-ui, sans-serif; font-weight: 600; font-size: 11px; color: var(--muted); letter-spacing: 0; }
+.nav-group { display: flex; align-items: center; gap: 8px; margin: 14px 0 4px 10px; font-family: Poppins, system-ui, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.nav-group i { width: 8px; height: 8px; border-radius: 50%; }
+.nav-group.p i { background: var(--pink); } .nav-group.c i { background: var(--green); } .nav-group.n i { background: var(--black); }
+.nav-item { display: flex; align-items: center; gap: 10px; width: 100%; height: 38px; padding: 0 12px; border: 0; background: transparent; border-radius: var(--r-md); font-size: 13px; font-weight: 600; text-align: left; color: var(--black); }
+.nav-item:hover { background: var(--grey-2); }
+.nav-item .n { margin-left: auto; font-family: Nunito, system-ui, sans-serif; font-size: 11px; font-weight: 700; background: var(--white); border-radius: var(--r-pill); padding: 1px 8px; color: var(--muted); }
+.nav-item.on.p { background: var(--pink); color: var(--black); } .nav-item.on.c { background: var(--green); color: #fff; } .nav-item.on.n { background: var(--black); color: #fff; }
+.nav-item.on .n { background: rgba(255,255,255,.75); color: var(--black); }
+.side-foot { margin-top: auto; padding-top: 14px; display: flex; flex-direction: column; gap: 2px; }
+.userchip { display: flex; align-items: center; gap: 10px; padding: 8px 10px; }
+.userchip .nm { font-weight: 700; font-size: 13px; line-height: 1.2; }
+.ver { font-size: 10.5px; color: var(--muted); padding: 2px 12px; }
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.topbar { height: 54px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 22px; border-bottom: 1px solid var(--line); }
+.topbar h1 { margin: 0; font-size: 15px; font-weight: 700; }
+.topbar .mob-brand { display: none; }
+.sync { font-size: 11.5px; font-weight: 600; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; margin-left: auto; white-space: nowrap; }
+.sync i { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+.sync.saving i { background: var(--amber); } .sync.error i, .sync.offline i { background: var(--red); } .sync.error, .sync.offline { color: var(--red); }
+.content { flex: 1; overflow: auto; -webkit-overflow-scrolling: touch; }
+.pad { padding: 18px 24px 60px; }
+
+/* ---------- area band ---------- */
+.band { background: var(--a); color: var(--a-ink); padding: 22px 24px 20px; position: relative; overflow: hidden; }
+.band::after { content: ''; position: absolute; right: -60px; top: -80px; width: 260px; height: 260px; border-radius: 50%; background: rgba(255,255,255,.16); pointer-events: none; }
+.band .k { font-family: Poppins, system-ui, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; opacity: .85; }
+.band h2 { margin: 2px 0 2px; font-size: 26px; font-weight: 800; letter-spacing: -.3px; }
+.band p { margin: 0; font-size: 14px; opacity: .9; max-width: 720px; }
+.band-note { position: relative; z-index: 1; display: flex; gap: 12px; align-items: flex-start; margin-top: 14px; background: var(--white); color: var(--black); border-radius: var(--r-md); padding: 11px 14px; max-width: 760px; font-size: 13.5px; }
+.band-note b { font-family: Poppins, system-ui, sans-serif; font-weight: 700; }
+.band-note .ic { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--black); color: #fff; display: grid; place-items: center; font-family: Poppins, system-ui, sans-serif; font-weight: 800; font-size: 13px; }
+.toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--white); position: sticky; top: 0; z-index: 4; }
+.search { position: relative; flex: 0 1 260px; min-width: 160px; }
+.search .inp { border-radius: var(--r-pill); min-height: 34px; padding-left: 34px; font-size: 13px; }
+.search::before { content: ''; position: absolute; left: 13px; top: 50%; width: 11px; height: 11px; border: 2px solid var(--muted); border-radius: 50%; transform: translateY(-62%); }
+.search::after { content: ''; position: absolute; left: 24px; top: 58%; width: 6px; height: 2px; background: var(--muted); transform: rotate(45deg); }
+
+/* ---------- prospects board ---------- */
+.kanban { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); gap: 14px; padding: 18px 24px 60px; overflow-x: auto; align-items: start; }
+.k-col { background: var(--grey); border-radius: var(--r-lg); padding: 10px; min-height: 140px; }
+.k-col-h { display: flex; align-items: center; gap: 8px; padding: 4px 4px 10px; font-size: 13px; font-weight: 700; }
+.k-col-h .n { margin-left: auto; font-family: Nunito, system-ui, sans-serif; font-size: 12px; color: var(--muted); }
+.k-card { background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--s, var(--grey-2)); border-radius: 12px; padding: 11px 12px; margin-bottom: 8px; cursor: pointer; transition: box-shadow .12s, transform .12s; }
+.k-card:hover { box-shadow: 0 6px 18px rgba(36,36,36,.08); transform: translateY(-1px); }
+.k-name { font-weight: 800; font-size: 14.5px; line-height: 1.25; }
+.k-sub { font-size: 12.5px; color: var(--muted); margin: 2px 0 8px; }
+.k-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; }
+.k-acts { display: flex; align-items: center; gap: 6px; margin-top: 10px; padding-top: 9px; border-top: 1px dashed var(--line); }
+.k-acts .sel { min-height: 28px; font-size: 12px; padding: 2px 26px 2px 10px; border-radius: var(--r-pill); width: auto; flex: 1; }
+.k-empty { color: var(--muted); font-size: 12.5px; padding: 10px 6px; }
+
+/* ---------- tables, lists, cards ---------- */
+.card { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 16px; }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-lg); }
+table.tbl { width: 100%; border-collapse: collapse; min-width: 760px; }
+.tbl th { text-align: left; font-family: Poppins, system-ui, sans-serif; font-size: 10.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--white); white-space: nowrap; }
+.tbl td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl tr.click { cursor: pointer; }
+.tbl tr.click:hover td { background: var(--a-soft); }
+.grid-t { display: grid; grid-template-columns: 76px repeat(4, minmax(64px, 1fr)); gap: 6px; max-width: 620px; margin-bottom: 18px; }
+.grid-t .hd { font-family: Poppins, system-ui, sans-serif; font-size: 11px; font-weight: 600; color: var(--muted); text-align: center; padding: 4px; }
+.grid-t .hd.l { text-align: left; align-self: center; }
+.grid-t .cell { background: var(--white); border: 1px solid var(--line); border-radius: var(--r-md); text-align: center; padding: 10px 4px; font-family: Poppins, system-ui, sans-serif; font-weight: 700; font-size: 18px; cursor: pointer; }
+.grid-t .cell:hover { background: var(--a-soft); }
+.grid-t .cell.sel { outline: 2px solid var(--a); }
+.q-item { display: grid; grid-template-columns: 30px 1fr auto; gap: 12px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.q-item:last-child { border-bottom: 0; }
+.q-rank { font-family: Poppins, system-ui, sans-serif; font-weight: 800; color: var(--green); font-size: 19px; }
+.q-move { font-weight: 800; margin-top: 3px; }
+.name { font-weight: 800; cursor: pointer; }
+.name:hover { text-decoration: underline; text-decoration-color: var(--a); text-underline-offset: 3px; }
+.cols4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.mini { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+details.co { margin-bottom: 10px; padding: 0; overflow: hidden; }
+details.co summary { cursor: pointer; padding: 12px 16px; display: flex; gap: 10px; align-items: center; list-style: none; }
+details.co summary::-webkit-details-marker { display: none; }
+details.co[open] summary { border-bottom: 1px solid var(--line); }
+details.co .tbl-wrap { border: 0; border-radius: 0; }
+.sort-grp { margin-bottom: 18px; overflow: hidden; padding: 0; }
+.sort-grp-h { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 16px; background: var(--grey); border-bottom: 1px solid var(--line); }
+.sort-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.sort-row:last-child { border-bottom: 0; }
+.m-row { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.m-row:last-child { border-bottom: 0; }
+.m-row .inp, .m-row .sel { min-height: 34px; font-size: 13px; }
+.conote { font-size: 12.5px; color: var(--muted); cursor: pointer; margin-top: 3px; }
+.conote:hover { color: var(--black); text-decoration: underline; }
+.notice { display: flex; gap: 10px; align-items: flex-start; background: var(--pink-soft); border: 1px solid var(--pink-mid); border-radius: var(--r-md); padding: 11px 14px; margin-bottom: 14px; font-size: 13.5px; }
+.notice.warn { background: #FFF6E5; border-color: #F3D49B; }
+.empty { text-align: center; color: var(--muted); padding: 40px 16px; }
+.leaving { pointer-events: none; overflow: hidden; animation: leave .3s ease forwards; }
+@keyframes leave { 0% { opacity: 1; max-height: 260px; } 50% { opacity: 0; transform: translateX(28px); max-height: 260px; } 100% { opacity: 0; transform: translateX(28px); max-height: 0; padding-top: 0; padding-bottom: 0; border-bottom-width: 0; } }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-pill); padding: 2px; background: var(--grey); }
+.seg button { border: 0; background: transparent; border-radius: var(--r-pill); padding: 5px 14px; font-size: 12.5px; font-weight: 600; color: var(--muted); font-family: Poppins, system-ui, sans-serif; }
+.seg button.on { background: var(--white); color: var(--black); box-shadow: 0 0 0 1px var(--line); }
+
+/* ---------- drawer, modal, toast ---------- */
+.scrim { position: fixed; inset: 0; background: rgba(36,36,36,.4); z-index: 50; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(560px, 100vw); background: var(--white); z-index: 51; display: flex; flex-direction: column; box-shadow: -12px 0 40px rgba(36,36,36,.12); }
+.d-head { background: var(--a); color: var(--a-ink); padding: 18px 20px 16px; }
+.d-head h2 { margin: 4px 0 2px; font-size: 22px; font-weight: 800; letter-spacing: -.2px; }
+.d-head .k { font-family: Poppins, system-ui, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; opacity: .85; }
+.d-head .btn-x { background: rgba(255,255,255,.35); border: 0; border-radius: var(--r-pill); width: 32px; height: 32px; font-size: 18px; line-height: 1; color: inherit; }
+.d-body { flex: 1; overflow-y: auto; padding: 18px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+.d-foot { padding: 12px 20px; border-top: 1px solid var(--line); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.full { grid-column: 1 / -1; }
+.sec { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.sec::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.facts { background: var(--grey); border-radius: var(--r-md); padding: 10px 12px; font-size: 13px; }
+.facts div { display: flex; justify-content: space-between; gap: 10px; padding: 2px 0; }
+.facts .best { font-weight: 800; }
+.typeseg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.typeseg button { border: 1.5px solid var(--line); background: var(--white); border-radius: var(--r-md); padding: 10px; font-family: Poppins, system-ui, sans-serif; font-weight: 700; font-size: 13px; }
+.typeseg button.on.p { background: var(--pink); border-color: var(--pink); color: var(--black); }
+.typeseg button.on.c { background: var(--green); border-color: var(--green); color: #fff; }
+.modal { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(460px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; background: var(--white); border-radius: var(--r-lg); z-index: 61; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 20px 60px rgba(36,36,36,.2); }
+.modal h3 { margin: 0; font-size: 17px; font-weight: 700; }
+.modal .acts { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.scrim.m { z-index: 60; }
+.err { color: var(--red); font-size: 12.5px; font-weight: 700; min-height: 16px; }
+.toasts { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 90; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast { background: var(--black); color: #fff; border-radius: var(--r-pill); padding: 9px 16px; font-size: 13px; font-weight: 600; max-width: 92vw; }
+.toast.bad { background: var(--red); }
+
+/* ---------- sign in ---------- */
+.login { position: fixed; inset: 0; display: grid; grid-template-columns: 1fr 1fr; overflow: auto; }
+.lg-left { background: var(--black); color: #fff; padding: 44px 56px; display: flex; flex-direction: column; }
+.lg-left .brand { font-size: 22px; padding: 0; }
+.lg-hero { margin: auto 0; font-family: Poppins, system-ui, sans-serif; font-weight: 800; font-size: clamp(32px, 4vw, 54px); line-height: 1.08; letter-spacing: -.8px; }
+.lg-hero em { font-style: normal; color: var(--pink); }
+.lg-keys { display: flex; gap: 10px; flex-wrap: wrap; }
+.lg-keys span { border-radius: var(--r-pill); padding: 5px 12px; font-size: 12px; font-weight: 700; }
+.lg-right { display: flex; align-items: center; justify-content: center; padding: 40px 28px; background: var(--grey); }
+.lg-form { width: min(400px, 100%); display: flex; flex-direction: column; gap: 14px; }
+.lg-form h2 { margin: 0; font-size: 30px; font-weight: 800; }
+.lg-form .inp { height: 46px; }
+.lg-form .btn { min-height: 48px; font-size: 14px; }
+.check { display: flex; align-items: center; gap: 9px; font-size: 13px; cursor: pointer; }
+.check input { accent-color: var(--pink); width: 16px; height: 16px; }
+
+@media (max-width: 860px) {
+  #app { flex-direction: column; }
+  .side { width: 100%; flex-direction: row; align-items: center; padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); gap: 4px; overflow-x: auto; overflow-y: hidden; border-right: 0; border-top: 1px solid var(--line); order: 2; }
+  .side .brand, .side .nav-group, .side-foot .userchip, .side-foot .ver { display: none; }
+  .side-foot { margin: 0; padding: 0; flex-direction: row; }
+  .nav-item { width: auto; flex: none; height: 34px; white-space: nowrap; }
+  .main { order: 1; flex: 1; min-height: 0; }
+  .topbar { height: 50px; padding: 0 14px; }
+  .topbar .mob-brand { display: inline-flex; align-items: center; gap: 8px; font-family: Poppins, system-ui, sans-serif; font-weight: 800; }
+  .topbar h1 { display: none; }
+  .band { padding: 18px 16px; } .band h2 { font-size: 22px; }
+  .toolbar { padding: 10px 14px; } .pad { padding: 14px 14px 60px; }
+  .kanban { padding: 14px; grid-auto-columns: minmax(250px, 86vw); }
+  .grid2 { grid-template-columns: 1fr; }
+  .cols4 { grid-template-columns: 1fr 1fr; }
+  .login { grid-template-columns: 1fr; } .lg-left { padding: 24px; } .lg-hero { font-size: 30px; margin: 28px 0 14px; }
+  input:not([type=checkbox]), select, textarea { font-size: 16px !important; }
+  .q-item { grid-template-columns: 24px 1fr; } .q-item .acts { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) { .leaving { animation-duration: .01s; } .btn, .k-card { transition: none; } }
 </style>
 </head>
 <body>
-
-<header>
-  <div class="brand">Client Radar<span>.</span></div>
-  <nav id="nav" class="hide">
-    <button class="tab" data-v="today">Today</button>
-    <button class="tab" data-v="everyone">Everyone</button>
-    <button class="tab" data-v="companies">By company</button>
-    <button class="tab" data-v="testimonials">Testimonials</button>
-    <button class="tab" data-v="meetings">Recent meetings <span class="n" id="meetCount">0</span></button>
-    <button class="tab" data-v="add">+ Add</button>
-    <button class="tab" data-v="archive">Archive</button>
-  </nav>
-  <button id="refresh" class="ghost hide" style="background:none;color:#fff">Refresh</button>
-  <button id="lock" class="ghost hide" style="background:none;color:#fff">Lock</button>
-</header>
-
-<main>
-  <section id="login" class="card">
-    <h2>Unlock Client Radar</h2>
-    <p class="sub small">Paste the web app address and your password. This browser remembers them until you press Lock. No client data is stored in the page.</p>
-    <label>Web app address</label>
-    <input id="inUrl" placeholder="https://script.google.com/macros/s/.../exec">
-    <div style="height:10px"></div>
-    <label>Password (the token from the Apps Script log)</label>
-    <input id="inToken" type="password">
-    <div style="height:14px"></div>
-    <button class="primary" id="unlock">Unlock</button>
-    <p id="loginMsg" class="small muted"></p>
-  </section>
-  <section id="view"></section>
-</main>
-
-<aside id="drawer"></aside>
-<div id="toast"></div>
-
+<div id="app"><div class="empty" style="margin:auto">Loading Client Radar</div></div>
 <script>
-/* ============ Settings ============ */
-var THRESH = { A: [30, 90], B: [60, 150], C: [120, 365] };
-var GROUPS = ['Active Clients', 'Hot Prospects & Previous Clients', 'Direct clients we met through agencies', 'Partnerships', 'Good to keep in touch but not a decision maker', 'To be sorted'];
-var RECONNECT = ['Leave For Now', 'Reconnected', 'Positive Reply'];
-var STATUS = ['Chasing', 'Responding', 'Ghosted'];
-var TESTI = ['To ask', 'Asked', 'Received', 'Not suitable'];
-var OWNERS = ['Gulliver Moore', 'Oliver Clubb', 'Amy Scott', 'Kurt Cavadias'];
-var FREE_MAIL = ['gmail.com', 'googlemail.com', 'hotmail.com', 'hotmail.co.uk', 'outlook.com', 'live.com', 'yahoo.com', 'yahoo.co.uk', 'icloud.com', 'me.com', 'aol.com', 'btinternet.com', 'proton.me', 'protonmail.com'];
+(function () {
+'use strict';
 
-var S = { url: '', token: '', clients: [], archive: [], today: '', view: 'today', filter: {}, openId: null, meet: { list: [], ignored: { emails: [], domains: [] }, days: 14, err: '', loaded: false } };
+/* ---- CONFIG: paste the Apps Script web app URL between the quotes ---- */
+const API_URL = 'https://script.google.com/macros/s/AKfycbzF5sjSS2iCKAw3-5DBWZ6AeXRYfwSa22M8j1Dpe3pt7ndfYZ85IDNA7eim4R48jRXlwA/exec';
+/* ---------------------------------------------------------------------- */
+const APP_VERSION = '2.0.0';
+const POLL_MS = 20000;
+const THRESH = { A: [30, 90], B: [60, 150], C: [120, 365] };
+const FREE_MAIL = ['gmail.com', 'googlemail.com', 'hotmail.com', 'hotmail.co.uk', 'outlook.com', 'live.com', 'yahoo.com', 'yahoo.co.uk', 'icloud.com', 'me.com', 'aol.com', 'btinternet.com', 'proton.me', 'protonmail.com'];
+const PERSON_COL = ['#242424', '#2F8FE0', '#7B4FD0', '#CC8400', '#5B6B8C', '#0E8A8A'];
+/* "Add as" choices: one box sets the type and either the prospect status or the client tier */
+const ADD_AS = [['P|Hot', 'Hot prospect'], ['P|Warm', 'Warm prospect'], ['P|Meeting booked', 'Prospect, meeting booked'], ['C|A', 'Client, A tier'], ['C|B', 'Client, B tier'], ['C|C', 'Client, C tier'], ['C|', 'Client, tier later']];
 
-/* ============ Small helpers ============ */
-function $(s) { return document.querySelector(s); }
-function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-function toast(m) { var t = $('#toast'); t.textContent = m; t.style.display = 'block'; clearTimeout(toast.h); toast.h = setTimeout(function () { t.style.display = 'none'; }, 2600); }
-function store(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
-function load(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+const S = {
+  api: '', token: '', me: null, people: [], contacts: [], archive: [], today: '', lists: {}, codes: [], codesErr: '', lastSync: '', v: 0,
+  view: 'prospects', pf: {}, cf: {}, open: null, dirty: false, sync: 'saved', inflight: 0, stale: false,
+  meet: { list: [], ignored: { emails: [], domains: [] }, days: 14, problems: [], loaded: false, loading: false, err: '', scope: 'mine' }
+};
+
+/* ============ small helpers ============ */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const norm = s => String(s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+const store = {
+  get: k => { try { return localStorage.getItem(k) || sessionStorage.getItem(k) || ''; } catch (e) { return ''; } },
+  set: (k, v, keep) => { try { (keep === false ? sessionStorage : localStorage).setItem(k, v); } catch (e) {} },
+  del: k => { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch (e) {} }
+};
+function toast(msg, bad) {
+  let box = $('.toasts'); if (!box) { box = document.createElement('div'); box.className = 'toasts'; document.body.appendChild(box); }
+  const t = document.createElement('div'); t.className = 'toast' + (bad ? ' bad' : ''); t.textContent = msg; box.appendChild(t);
+  setTimeout(() => t.remove(), bad ? 5000 : 2600);
+}
+const opts = (list, cur, blank) => (blank != null ? `<option value="">${esc(blank)}</option>` : '') + list.map(o => { const v = Array.isArray(o) ? o[0] : o, l = Array.isArray(o) ? o[1] : o; return `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(l)}</option>`; }).join('');
+const withCur = (list, cur) => (cur && !list.includes(cur) ? list.concat([cur]) : list);
 
 /* Dates: stored YYYY-MM-DD, always shown DD/MM/YYYY */
-function uk(ymd) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : ''; }
+function uk(ymd) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ymd || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : ''; }
 function fromUk(s) {
   s = String(s || '').trim(); if (!s) return '';
-  var m = /^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2}|\d{4})$/.exec(s);
-  if (!m) return null;
-  var y = m[3].length === 2 ? '20' + m[3] : m[3], mo = +m[2], d = +m[1];
+  const m = /^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2}|\d{4})$/.exec(s); if (!m) return null;
+  const y = m[3].length === 2 ? '20' + m[3] : m[3], mo = +m[2], d = +m[1];
   if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
   return y + '-' + String(mo).padStart(2, '0') + '-' + String(d).padStart(2, '0');
 }
-function dayNum(ymd) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(ymd || ''); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) / 864e5 : null; }
-function todayYmd() { return S.today || new Date().toISOString().slice(0, 10); }
-function daysSince(ymd) { var d = dayNum(ymd); return d == null ? null : dayNum(todayYmd()) - d; }
+function dayNum(ymd) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(ymd || ''); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3]) / 864e5 : null; }
+function todayYmd() { const d = new Date(); return S.today || `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+function daysSince(ymd) { const d = dayNum(ymd); return d == null ? null : dayNum(todayYmd()) - d; }
 function ago(n) {
-  if (n == null) return 'no date';
-  if (n <= 0) return 'today';
-  if (n === 1) return 'yesterday';
-  if (n < 14) return n + ' days';
-  if (n < 60) return Math.round(n / 7) + ' weeks';
-  if (n < 730) return Math.round(n / 30.4) + ' months';
+  if (n == null) return 'no date'; if (n <= 0) return 'today'; if (n === 1) return 'yesterday';
+  if (n < 14) return n + ' days'; if (n < 60) return Math.round(n / 7) + ' weeks'; if (n < 730) return Math.round(n / 30.4) + ' months';
   return (n / 365).toFixed(1).replace('.0', '') + ' years';
 }
-function times(n) { return n === 1 ? 'once' : n === 2 ? 'twice' : n + ' times'; }
+const times = n => (n === 1 ? 'once' : n === 2 ? 'twice' : n + ' times');
 
-/* ============ The rules ============ */
+/* ============ people ============ */
+const person = id => S.people.find(p => p.id === id) || null;
+const personName = id => (person(id) || {}).name || id || '';
+const owners = () => S.people.filter(p => p.owner);
+function initials(name) { const w = String(name || '').trim().split(/\s+/).filter(Boolean); return ((w[0] || '?')[0] + (w.length > 1 ? w[w.length - 1][0] : '')).toUpperCase(); }
+function personCol(id) { const i = Math.max(0, S.people.findIndex(p => p.id === id)); return PERSON_COL[i % PERSON_COL.length]; }
+function av(id, cls = '') {
+  if (!id) return `<span class="av av-none ${cls}" title="No owner yet">?</span>`;
+  const p = person(id), nm = p ? p.name : id;
+  return `<span class="av ${cls}" style="background:${personCol(id)}" title="${esc(nm)}">${esc(initials(nm))}</span>`;
+}
+function ownerOpts(cur) { const l = owners().map(p => [p.id, p.name]); if (cur && !l.some(x => x[0] === cur)) l.push([cur, personName(cur)]); return opts(l, cur, 'Nobody yet'); }
+
+/* ============ companies (BOARD's code list) ============ */
+function codeFor(company) { const n = norm(company); if (!n) return ''; const hit = S.codes.find(x => norm(x.name) === n); return hit ? hit.code : ''; }
+const codeList = () => `<datalist id="coList">${S.codes.map(c => `<option value="${esc(c.name)}">${esc(c.code)}</option>`).join('')}</datalist>`;
+
+/* ============ the rules (unchanged from 1.x) ============ */
+const isProspect = c => c.Type === 'Prospect';
+const isClient = c => c.Type === 'Client';
+const isUnsorted = c => !isProspect(c) && !isClient(c);
+const clients = () => S.contacts.filter(isClient);
+const prospects = () => S.contacts.filter(isProspect);
+const unsorted = () => S.contacts.filter(isUnsorted);
 function effective(c) {
-  var src = [['Manual', c['Last contacted']], ['Email', c['Last email']]].filter(function (x) { return dayNum(x[1]) != null; });
-  src.sort(function (a, b) { return b[1].localeCompare(a[1]); });
+  const src = [['Manual', c['Last contacted']], ['Email', c['Last email']]].filter(x => dayNum(x[1]) != null);
+  src.sort((a, b) => b[1].localeCompare(a[1]));
   return src.length ? { date: src[0][1], source: src[0][0] } : { date: '', source: '' };
 }
-function tierOf(c) { var t = String(c.Tier || '').toUpperCase(); return t === 'A' || t === 'B' || t === 'C' ? t : ''; }
+function tierOf(c) { const t = String(c.Tier || '').toUpperCase(); return t === 'A' || t === 'B' || t === 'C' ? t : ''; }
 function temp(c) {
-  var e = effective(c), n = daysSince(e.date);
-  if (n == null) return 'No date';
-  var th = THRESH[tierOf(c) || 'C'];
+  const n = daysSince(effective(c).date); if (n == null) return 'No date';
+  const th = THRESH[tierOf(c) || 'C'];
   return n <= th[0] ? 'Warm' : n <= th[1] ? 'Cooling' : 'Cold';
 }
-function chases(c) { var n = parseInt(c.Chases, 10); return isNaN(n) ? 0 : n; }
-function owesReply(c) { var n = daysSince(c['Last email']); return c['Last email from'] === 'them' && n != null && n <= 45; }
-function chip(t) { return '<span class="chip t-' + t.replace(' ', '') + '">' + esc(t) + '</span>'; }
-function tierTag(c) { var t = tierOf(c); return t ? '<span class="tier">' + t + '</span>' : '<span class="tier muted" style="border-color:#ccc">-</span>'; }
+function chases(c) { const n = parseInt(c.Chases, 10); return isNaN(n) ? 0 : n; }
+function owesReply(c) { const n = daysSince(c['Last email']); return c['Last email from'] === 'them' && n != null && n <= 45; }
+const tchip = t => `<span class="chip t-${t.replace(' ', '')}">${esc(t)}</span>`;
+const pschip = s => `<span class="chip ps-${(s || 'None').replace(' ', '')}">${esc(s || 'No status yet')}</span>`;
+const typechip = c => (isProspect(c) ? '<span class="chip type-Prospect">Prospect</span>' : isClient(c) ? '<span class="chip type-Client">Client</span>' : '<span class="chip ps-None">To sort</span>');
+const tierTag = c => (tierOf(c) ? `<span class="tier">${tierOf(c)}</span>` : '<span class="tier none">-</span>');
+const liLink = c => (c.LinkedIn && /^https?:\/\//i.test(c.LinkedIn) ? `<a class="li" href="${esc(c.LinkedIn)}" target="_blank" rel="noopener noreferrer" title="Open LinkedIn" data-stop>in</a>` : '');
+const PS_COL = { 'Meeting booked': '#242424', Hot: '#FF50BE', Warm: '#FFC2E7', '': '#ECE9EA' };
 
-/* Today queue: A and B only, skips Leave For Now and To be sorted, top 10 */
+/* Today: Clients only, A and B tier, skips Leave For Now, top 10 */
 function queue() {
-  var out = [];
-  S.clients.forEach(function (c) {
-    var t = tierOf(c);
-    if (t !== 'A' && t !== 'B') return;
-    if (c.Reconnect === 'Leave For Now' || c.Group === 'To be sorted') return;
-    var tp = temp(c), owe = owesReply(c), ch = chases(c);
+  const out = [];
+  clients().forEach(c => {
+    const t = tierOf(c); if (t !== 'A' && t !== 'B') return;
+    if (c.Reconnect === 'Leave For Now') return;
+    const tp = temp(c), owe = owesReply(c), ch = chases(c);
     if (tp === 'Warm' && !owe) return;
-    var n = daysSince(effective(c).date);
-    var quiet = n == null ? 3 : n / THRESH[t][0];
-    var score = quiet * (t === 'A' ? 1.5 : 1) + (owe ? 5 : 0) + Math.min(ch, 4) * 0.5;
-    out.push({ c: c, score: score });
+    const n = daysSince(effective(c).date), quiet = n == null ? 3 : n / THRESH[t][0];
+    out.push({ c, score: quiet * (t === 'A' ? 1.5 : 1) + (owe ? 5 : 0) + Math.min(ch, 4) * 0.5 });
   });
-  out.sort(function (a, b) { return b.score - a.score; });
-  return out.slice(0, 10).map(function (x) { return x.c; });
+  out.sort((a, b) => b.score - a.score);
+  return out.slice(0, 10).map(x => x.c);
 }
 function reason(c) {
-  var bits = [tierOf(c) + ' tier'], n = daysSince(effective(c).date), ch = chases(c);
-  if (owesReply(c)) bits.push('they emailed ' + ago(daysSince(c['Last email'])) + ' ago and you haven’t replied');
+  const bits = [tierOf(c) + ' tier'], n = daysSince(effective(c).date), ch = chases(c);
+  if (owesReply(c)) bits.push('they emailed ' + ago(daysSince(c['Last email'])) + ' ago and nobody has replied');
   else bits.push(n == null ? 'no contact on record' : ago(n) + ' quiet');
   if (ch > 0) bits.push('emailed ' + times(ch) + ' with no reply');
   return bits.join(', ');
 }
 function suggest(c) {
-  var ch = chases(c), tp = temp(c);
+  const ch = chases(c), tp = temp(c);
   if (owesReply(c)) return 'Reply to their email';
-  if (ch >= 2) return 'Email isn’t landing, try a call';
-  var recent = daysSince(c['Last email']) != null && daysSince(c['Last email']) <= 14;
+  if (ch >= 2) return 'Email is not landing, try a call';
+  const recent = daysSince(c['Last email']) != null && daysSince(c['Last email']) <= 14;
   if (ch === 1 && recent) return 'Give it a few days, then nudge';
-  if (ch === 1) return 'Your last email went unanswered, try a nudge or a call';
+  if (ch === 1) return 'The last email went unanswered, try a nudge or a call';
   if (!c.Email) return 'Add an email address so it can be tracked';
   if (tp === 'No date') return 'Send a hello and log the date';
   if (tp === 'Cold') return 'Send a catch-up with something useful, like recent work';
@@ -223,528 +385,736 @@ function suggest(c) {
 }
 
 /* ============ API ============ */
-function api(action, extra) {
-  var body = Object.assign({ token: S.token, action: action }, extra || {});
-  return fetch(S.url, { method: 'POST', body: JSON.stringify(body) })
-    .then(function (r) { return r.json(); })
-    .then(function (j) { if (!j.ok) throw new Error(j.error || 'Request failed'); return j.data; });
+const WRITES = new Set(['update', 'touch', 'add', 'bulk', 'archive', 'restore', 'ignore', 'unignore']);
+async function api(action, params = {}, tries = 0) {
+  if (!S.api) throw new Error('No web app address yet.');
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 45000);
+  let res;
+  try {
+    res = await fetch(S.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ action, token: S.token, cv: APP_VERSION }, params)), signal: ctl.signal });
+  } catch (e) { throw new Error(e.name === 'AbortError' ? 'The sheet took too long to answer.' : 'Cannot reach the sheet. Check your connection.'); }
+  finally { clearTimeout(to); }
+  let j; try { j = await res.json(); } catch (e) { throw new Error('The sheet sent something unexpected. Is the web app address right?'); }
+  if (!j.ok) {
+    if (j.error === 'AUTH') { signedOut('Your sign-in has ended. Please sign in again. Nothing was lost.'); throw new Error('Please sign in again.'); }
+    if (/^BUSY/.test(j.error || '') && tries < 3) { await sleep(1200 + Math.random() * 1200); return api(action, params, tries + 1); }
+    throw new Error(String(j.error || 'Something went wrong').replace(/^BUSY: /, ''));
+  }
+  if (j.v != null) noteVersion(j.v, action);
+  return j.data;
 }
-function loadAll() {
-  return api('list').then(function (d) { S.clients = d.clients; S.archive = d.archive; S.today = d.today; render(); loadMeetings(); });
+function noteVersion(v, action) {
+  if (action === 'bootstrap') { S.v = v; return; }
+  if (action === 'version') { if (v !== S.v) refreshSoon(); return; }
+  if (WRITES.has(action)) { if (v !== S.v + 1) refreshSoon(); S.v = Math.max(S.v, v); }
 }
-function loadMeetings() {
-  return api('meetings').then(function (d) {
-    S.meet = { list: d.list, ignored: d.ignored, days: d.days, err: '', loaded: true }; render();
-  }).catch(function (e) { S.meet.err = e.message; S.meet.loaded = true; render(); });
+/* Saves go out one after another, in the order they were made */
+let chain = Promise.resolve();
+function write(action, params) {
+  S.inflight++; setSync('saving');
+  const p = chain.then(() => api(action, params));
+  chain = p.catch(() => {});
+  return p.then(d => { if (--S.inflight === 0) setSync('saved'); return d; },
+    e => { S.inflight--; setSync(/reach|too long/i.test(e.message) ? 'offline' : 'error'); throw e; });
 }
-function byId(id) { return S.clients.filter(function (c) { return c.ID === id; })[0]; }
+function setSync(state) {
+  S.sync = state; const el = $('#sync'); if (!el) return;
+  const t = { saved: 'Saved to the sheet', saving: 'Saving', error: 'Not saved', offline: 'Cannot reach the sheet' }[state];
+  el.className = 'sync ' + state; el.innerHTML = `<i></i>${t}`;
+}
 
-/* ============ Login ============ */
-function unlock(url, token) {
-  S.url = url.trim(); S.token = token.trim();
-  $('#loginMsg').textContent = 'Checking…';
-  loadAll().then(function () {
-    store('cr_url', S.url); store('cr_token', S.token);
-    $('#login').classList.add('hide');
-    ['#nav', '#refresh', '#lock'].forEach(function (s) { $(s).classList.remove('hide'); });
-  }).catch(function (e) {
-    $('#loginMsg').textContent = 'Could not unlock: ' + e.message;
+/* ============ loading and live refresh ============ */
+function apply(d) {
+  S.me = d.me; S.people = d.people || []; S.contacts = d.contacts || []; S.archive = d.archive || []; S.today = d.today; S.lists = d.lists || {};
+  S.codes = (d.codes && d.codes.list) || []; S.codesErr = (d.codes && d.codes.error) || ''; S.lastSync = d.lastSync || '';
+}
+async function loadAll() { const d = await api('bootstrap'); apply(d); }
+let rsT = null;
+function refreshSoon() { if (rsT) return; rsT = setTimeout(() => { rsT = null; refresh(); }, 400 + Math.random() * 1200); }
+function typing() { const a = document.activeElement; return !!(a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.type !== 'checkbox'); }
+async function refresh() {
+  if (!S.token) return;
+  try { await chain; await loadAll(); } catch (e) { return; }
+  softRender();
+}
+function softRender() {
+  if (typing() || S.dirty) { S.stale = true; return; }
+  S.stale = false; renderView(); if (S.open) openDrawer(S.open, true);
+}
+document.addEventListener('focusout', () => setTimeout(() => { if (S.stale && !typing() && !S.dirty) softRender(); }, 80));
+async function poll() {
+  if (!S.token || document.hidden || S.inflight) return;
+  try { await api('version'); if (S.sync === 'offline') setSync('saved'); } catch (e) { if (/reach|too long/i.test(e.message)) setSync('offline'); }
+}
+(function loop() { setTimeout(async () => { try { await poll(); } finally { loop(); } }, POLL_MS * (0.8 + Math.random() * 0.4)); })();
+document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });
+
+/* ============ sign in ============ */
+function signedOut(msg) { S.token = ''; S.me = null; store.del('cr2_token'); closeDrawer(true); closeModal(); showLogin(msg); }
+function showLogin(msg) {
+  $('#app').innerHTML = `<div class="login">
+    <div class="lg-left"><div class="brand"><span class="brand-dot"></span><span>Client Radar</span></div>
+      <div class="lg-hero">Every relationship,<br>one <em>radar</em>.</div>
+      <div class="lg-keys"><span style="background:var(--pink);color:var(--black)">Prospects</span><span style="background:var(--green);color:#fff">Clients</span></div></div>
+    <div class="lg-right"><form class="lg-form" id="lgForm" autocomplete="on">
+      <h2>Sign in</h2>
+      <div class="muted">Use your full name and your own passcode.</div>
+      ${API_URL ? '' : `<div class="field"><span class="lbl">Web app address</span><input class="inp" id="lgApi" placeholder="https://script.google.com/macros/s/.../exec" value="${esc(store.get('cr_url'))}"></div>`}
+      <div class="field"><span class="lbl">Full name</span><input class="inp" id="lgName" name="username" autocomplete="username" autocapitalize="words" spellcheck="false"></div>
+      <div class="field"><span class="lbl">Passcode</span><input class="inp" id="lgPass" name="password" type="password" autocomplete="current-password"></div>
+      <label class="check"><input type="checkbox" id="lgRem" checked>Remember me on this device (not on shared computers)</label>
+      <div class="err" id="lgErr">${esc(msg || '')}</div>
+      <button class="btn btn-pink" type="submit" id="lgBtn">Sign in</button>
+    </form></div></div>`;
+  document.body.removeAttribute('data-area');
+  $('#lgForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const err = $('#lgErr'), btn = $('#lgBtn'), name = $('#lgName').value.trim(), pass = $('#lgPass').value;
+    if (!API_URL) { S.api = $('#lgApi').value.trim(); if (!/^https:\/\/script\.google(usercontent)?\.com\//.test(S.api)) { err.textContent = 'Paste the web app address from Apps Script first.'; return; } }
+    if (!name || !pass) { err.textContent = 'Enter your full name and passcode.'; return; }
+    btn.disabled = true; btn.textContent = 'Signing in'; err.textContent = '';
+    try {
+      const d = await api('login', { name, pass, remember: $('#lgRem').checked });
+      S.token = d.token; store.set('cr2_token', d.token, $('#lgRem').checked);
+      if (!API_URL) store.set('cr_url', S.api);
+      await start();
+    } catch (x) { err.textContent = x.message; btn.disabled = false; btn.textContent = 'Sign in'; }
   });
+  const f = API_URL || store.get('cr_url') ? $('#lgName') : $('#lgApi'); if (f) f.focus();
 }
-$('#unlock').onclick = function () { unlock($('#inUrl').value, $('#inToken').value); };
-$('#lock').onclick = function () { store('cr_url', null); store('cr_token', null); location.reload(); };
-$('#refresh').onclick = function () { loadAll().then(function () { toast('Up to date'); }).catch(function (e) { toast(e.message); }); };
-document.querySelectorAll('.tab').forEach(function (b) { b.onclick = function () { S.view = b.dataset.v; render(); window.scrollTo(0, 0); }; });
-
-/* ============ Rendering ============ */
-function updateBadge() { $('#meetCount').textContent = S.meet.list.length + unsorted().length; }
-
-function render() {
-  document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('on', b.dataset.v === S.view); });
-  updateBadge();
-  var v = { today: vToday, everyone: vEveryone, companies: vCompanies, testimonials: vTesti, meetings: vMeetings, add: vAdd, archive: vArchive }[S.view];
-  $('#view').innerHTML = v();
-  bindView();
-  if (S.openId) openDrawer(S.openId, true);
+async function start() {
+  $('#app').innerHTML = '<div class="empty" style="margin:auto">Loading Client Radar</div>';
+  await loadAll();
+  renderShell();
+  route();
+  loadMeetings();
 }
-
-function lastLine(c) {
-  var e = effective(c);
-  return e.date ? uk(e.date) + ' <span class="muted small">(' + e.source + ')</span>' : '<span class="muted">-</span>';
+async function boot() {
+  S.api = API_URL || store.get('cr_url');
+  store.del('cr_token');   /* the 1.x shared password is no longer used */
+  S.token = store.get('cr2_token');
+  if (S.api && S.token) {
+    try { await start(); return; }
+    catch (e) { if (!S.token) return; showLogin(e.message + ' Try again in a moment.'); return; }
+  }
+  showLogin('');
 }
 
+/* ============ shell and routing ============ */
+const VIEWS = {
+  prospects: { t: 'Prospects board', a: 'p', fn: () => vProspects() },
+  today: { t: 'Today', a: 'c', fn: () => vToday() },
+  everyone: { t: 'All clients', a: 'c', fn: () => vEveryone() },
+  companies: { t: 'By company', a: 'c', fn: () => vCompanies() },
+  testimonials: { t: 'Testimonials', a: 'c', fn: () => vTesti() },
+  sort: { t: 'To sort', a: 'n', fn: () => vSort() },
+  meetings: { t: 'Recent meetings', a: 'n', fn: () => vMeetings() },
+  add: { t: 'Add people', a: 'n', fn: () => vAdd() },
+  archive: { t: 'Archive', a: 'n', fn: () => vArchive() }
+};
+function renderShell() {
+  const item = (v, cnt) => `<button class="nav-item ${VIEWS[v].a}" data-go="${v}">${esc(VIEWS[v].t)}${cnt != null ? `<span class="n" data-count="${v}">${cnt}</span>` : ''}</button>`;
+  $('#app').innerHTML = `
+    <nav class="side">
+      <div class="brand"><span class="brand-dot"></span><span>Client Radar<small>Sunday Treat</small></span></div>
+      <div class="nav-group p"><i></i>Prospects</div>${item('prospects', 0)}
+      <div class="nav-group c"><i></i>Clients</div>${item('today', 0)}${item('everyone', 0)}${item('companies')}${item('testimonials')}
+      <div class="nav-group n"><i></i>Tools</div>${item('sort', 0)}${item('meetings', 0)}${item('add')}${item('archive')}
+      <div class="side-foot">
+        <div class="userchip">${av(S.me.id, 'av-lg')}<div><div class="nm">${esc(S.me.name)}</div><div class="small muted">Signed in</div></div></div>
+        <button class="nav-item n" data-act="mypass">Change my passcode</button>
+        <button class="nav-item n" data-act="signout">Sign out</button>
+        <div class="ver">Client Radar ${APP_VERSION}</div>
+      </div>
+    </nav>
+    <div class="main">
+      <div class="topbar"><span class="mob-brand"><span class="brand-dot"></span>Client Radar</span><h1 id="pageTitle"></h1><span class="sync" id="sync"></span></div>
+      <div class="content" id="content"></div>
+    </div>${codeList()}`;
+  setSync(S.sync);
+}
+function updateCounts() {
+  const c = { prospects: prospects().length, today: queue().length, everyone: clients().length, sort: unsorted().length, meetings: S.meet.list.length };
+  Object.keys(c).forEach(k => { const el = $(`[data-count="${k}"]`); if (el) el.textContent = c[k]; });
+  const dl = $('#coList'); if (dl && dl.children.length !== S.codes.length) dl.outerHTML = codeList();
+}
+function go(v) { if (location.hash !== '#/' + v) location.hash = '#/' + v; else route(); }
+function route() {
+  if (!S.me) return;
+  let v = location.hash.replace(/^#\/?/, '').split('/')[0];
+  if (!VIEWS[v]) v = 'prospects';
+  S.view = v; renderView();
+  const c = $('#content'); if (c) c.scrollTop = 0;
+}
+addEventListener('hashchange', route);
+function renderView() {
+  const c = $('#content'); if (!c) return;
+  const view = VIEWS[S.view], st = c.scrollTop;
+  document.body.dataset.area = view.a;
+  $$('[data-go]').forEach(b => b.classList.toggle('on', b.dataset.go === S.view));
+  $('#pageTitle').textContent = view.t;
+  c.innerHTML = view.fn();
+  c.scrollTop = st;
+  updateCounts();
+}
+function band(kicker, title, text, extra = '') { return `<div class="band"><div class="k">${esc(kicker)}</div><h2>${esc(title)}</h2><p>${text}</p>${extra}</div>`; }
+
+/* ============ Prospects board ============ */
+function vProspects() {
+  const f = S.pf, q = norm(f.q);
+  const list = prospects().filter(c => (!q || norm([c.Name, c.Company, c['Job Title'], c.Email].join(' ')).includes(q)) && (!f.owner || (f.owner === '_none' ? !c.Owner : c.Owner === f.owner)) && (!f.lead || c['Lead source'] === f.lead));
+  const cols = S.lists.prospectStatus.map(s => [s, s]).concat(list.some(c => !c['Prospect status']) ? [['', 'No status yet']] : []);
+  const note = `<div class="band-note"><span class="ic">!</span><div><b>Pitches live in BOARD, not here.</b> Track every pitch in BOARD under Tendering. This board is for people: who we want to work with, how warm they are, and who owns the relationship. When a prospect wins work, open them and press <b>Make client</b>.</div></div>`;
+  const card = c => {
+    const n = daysSince(effective(c).date);
+    return `<div class="k-card" data-open="${esc(c.ID)}" style="--s:${PS_COL[c['Prospect status'] || '']}">
+      <div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div class="grow"><div class="k-name">${esc(c.Name)}</div><div class="k-sub">${esc([c['Job Title'], c.Company].filter(Boolean).join(', ')) || '&nbsp;'}</div></div>${av(c.Owner)}</div>
+      <div class="k-meta">${c['Lead source'] ? `<span class="chip chip-src">${esc(c['Lead source'])}</span>` : ''}<span class="muted">${n == null ? 'No contact logged' : 'Last contact ' + ago(n) + (n > 1 ? ' ago' : '')}</span></div>
+      <div class="k-acts">${liLink(c)}<select class="sel" data-pstat="${esc(c.ID)}" data-stop title="Change status">${opts(S.lists.prospectStatus, c['Prospect status'] || '', 'No status yet')}</select></div></div>`;
+  };
+  return band('Prospects', 'Prospects', 'People we have not worked with yet. Hot, warm, or a meeting already in the diary.', note) +
+    `<div class="toolbar"><div class="search"><input class="inp" placeholder="Search prospects" value="${esc(f.q || '')}" data-pf="q"></div>
+      <select class="sel sel-sm" data-pf="owner">${opts([['_none', 'No owner']].concat(owners().map(p => [p.id, p.name])), f.owner, 'Any owner')}</select>
+      <select class="sel sel-sm" data-pf="lead">${opts(S.lists.leadSources, f.lead, 'Any lead source')}</select>
+      <span class="grow"></span><span class="small muted">${list.length} prospect${list.length === 1 ? '' : 's'}</span>
+      <button class="btn btn-primary" data-go="add">Add a prospect</button></div>
+    <div class="kanban">${cols.map(([key, label]) => {
+      const items = list.filter(c => (c['Prospect status'] || '') === key).sort((a, b) => String(a.Name).localeCompare(String(b.Name)));
+      return `<div class="k-col"><div class="k-col-h">${pschip(key)}<span class="n">${items.length}</span></div>${items.map(card).join('') || '<div class="k-empty">Nobody here yet</div>'}</div>`;
+    }).join('')}</div>`;
+}
+
+/* ============ Clients area ============ */
+function clientBand(title, text) { return band('Clients', title, text); }
 function vToday() {
-  var q = queue();
-  var h = '<h2>Today</h2><p class="sub">Top ' + q.length + ' A and B tier people to get in touch with.</p><div class="card">';
-  if (!q.length) h += '<p>Nobody needs a nudge. Nice.</p>';
-  q.forEach(function (c, i) {
-    h += '<div class="queue-item"><div class="rank">' + (i + 1) + '</div><div>' +
-      '<span class="name" data-open="' + esc(c.ID) + '">' + esc(c.Name) + '</span> ' + chip(temp(c)) +
-      '<div class="small muted">' + esc([c['Job Title'], c.Company].filter(Boolean).join(', ')) + '</div>' +
-      '<div class="small">' + esc(reason(c)) + '</div>' +
-      '<div class="small move">' + esc(suggest(c)) + '</div></div>' +
-      '<div class="row acts"><button data-touch="spoke" data-id="' + esc(c.ID) + '">Spoke today</button></div></div>';
+  const q = queue();
+  let h = clientBand('Today', `Top ${q.length} A and B tier clients to get in touch with.`) + '<div class="pad"><div class="card">';
+  if (!q.length) h += '<div class="empty">Nobody needs a nudge. Nice.</div>';
+  q.forEach((c, i) => {
+    h += `<div class="q-item"><div class="q-rank">${i + 1}</div><div><span class="name" data-open="${esc(c.ID)}">${esc(c.Name)}</span> ${tchip(temp(c))} ${av(c.Owner)}
+      <div class="small muted">${esc([c['Job Title'], c.Company].filter(Boolean).join(', '))}</div>
+      <div class="small">${esc(reason(c))}</div><div class="small q-move">${esc(suggest(c))}</div></div>
+      <div class="row acts"><button class="btn btn-soft btn-sm" data-touch="${esc(c.ID)}">Spoke today</button></div></div>`;
   });
-  return h + '</div>';
+  return h + '</div></div>';
 }
-
 function tempCounts() {
-  var g = {};
-  ['A', 'B', 'C'].forEach(function (t) { g[t] = { Warm: 0, Cooling: 0, Cold: 0, 'No date': 0 }; });
-  S.clients.forEach(function (c) { var t = tierOf(c); if (t) g[t][temp(c)]++; });
+  const g = {}; ['A', 'B', 'C'].forEach(t => { g[t] = { Warm: 0, Cooling: 0, Cold: 0, 'No date': 0 }; });
+  clients().forEach(c => { const t = tierOf(c); if (t) g[t][temp(c)]++; });
   return g;
 }
-
-function filtered() {
-  var f = S.filter, q = (f.q || '').toLowerCase();
-  return S.clients.filter(function (c) {
-    if (q && [c.Name, c.Company, c['Job Title'], c.Email, c.Note].join(' ').toLowerCase().indexOf(q) < 0) return false;
+function filteredClients() {
+  const f = S.cf, q = norm(f.q);
+  return clients().filter(c => {
+    if (q && !norm([c.Name, c.Company, c['Job Title'], c.Email, c.Note].join(' ')).includes(q)) return false;
     if (f.tier && (f.tier === 'none' ? tierOf(c) : tierOf(c) !== f.tier)) return false;
     if (f.temp && temp(c) !== f.temp) return false;
-    if (f.group && c.Group !== f.group) return false;
-    if (f.owner && c.Owner !== f.owner) return false;
+    if (f.owner && (f.owner === '_none' ? c.Owner : c.Owner !== f.owner)) return false;
     if (f.status && c.Status !== f.status) return false;
+    if (f.lead && c['Lead source'] !== f.lead) return false;
     return true;
-  }).sort(function (a, b) { return (a.Name || '').localeCompare(b.Name || ''); });
+  }).sort((a, b) => String(a.Name).localeCompare(String(b.Name)));
 }
-
-function opts(list, sel, blank) {
-  return (blank != null ? '<option value="">' + esc(blank) + '</option>' : '') +
-    list.map(function (o) { var v = Array.isArray(o) ? o[0] : o, l = Array.isArray(o) ? o[1] : o; return '<option value="' + esc(v) + '"' + (v === sel ? ' selected' : '') + '>' + esc(l) + '</option>'; }).join('');
-}
-
 function vEveryone() {
-  var g = tempCounts(), f = S.filter;
-  var h = '<h2>Everyone</h2><p class="sub">' + S.clients.length + ' people on the board. Click a number to filter.</p>';
-  h += '<div class="grid"><div></div>' + ['Warm', 'Cooling', 'Cold', 'No date'].map(function (t) { return '<div class="hd">' + t + '</div>'; }).join('');
-  ['A', 'B', 'C'].forEach(function (t) {
-    h += '<div class="hd" style="align-self:center">' + t + ' tier</div>';
-    ['Warm', 'Cooling', 'Cold', 'No date'].forEach(function (tp) {
-      var sel = f.tier === t && f.temp === tp;
-      h += '<div class="cell' + (sel ? ' sel' : '') + '" data-gt="' + t + '" data-gp="' + tp + '">' + g[t][tp] + '</div>';
-    });
+  const g = tempCounts(), f = S.cf, T = ['Warm', 'Cooling', 'Cold', 'No date'];
+  let h = clientBand('All clients', `${clients().length} people we have worked with. Click a number to filter.`) + '<div class="pad">';
+  h += `<div class="grid-t"><div></div>${T.map(t => `<div class="hd">${t}</div>`).join('')}`;
+  ['A', 'B', 'C'].forEach(t => {
+    h += `<div class="hd l">${t} tier</div>` + T.map(tp => `<div class="cell${f.tier === t && f.temp === tp ? ' sel' : ''}" data-gt="${t}" data-gp="${tp}">${g[t][tp]}</div>`).join('');
   });
-  h += '</div><div style="height:18px"></div>';
-  h += '<div class="row" style="margin-bottom:12px"><input id="fq" class="grow" style="max-width:260px" placeholder="Search name, company, email" value="' + esc(f.q || '') + '">' +
-    '<select id="ftier" style="width:auto">' + opts([['A', 'A tier'], ['B', 'B tier'], ['C', 'C tier'], ['none', 'No tier']], f.tier, 'All tiers') + '</select>' +
-    '<select id="ftemp" style="width:auto">' + opts(['Warm', 'Cooling', 'Cold', 'No date'], f.temp, 'Any temperature') + '</select>' +
-    '<select id="fgroup" style="width:auto">' + opts(GROUPS, f.group, 'All groups') + '</select>' +
-    '<select id="fowner" style="width:auto">' + opts(OWNERS, f.owner, 'Any owner') + '</select>' +
-    '<select id="fstatus" style="width:auto">' + opts(STATUS, f.status, 'Any status') + '</select>' +
-    '<button class="ghost" id="fclear">Clear</button></div>';
-  var list = filtered();
-  h += '<p class="small muted">' + list.length + ' shown</p>' + peopleTable(list);
-  return h;
+  h += `</div><div class="row" style="margin-bottom:12px"><div class="search"><input class="inp" placeholder="Search name, company, email" value="${esc(f.q || '')}" data-cf="q"></div>
+    <select class="sel sel-sm" data-cf="tier">${opts([['A', 'A tier'], ['B', 'B tier'], ['C', 'C tier'], ['none', 'No tier']], f.tier, 'All tiers')}</select>
+    <select class="sel sel-sm" data-cf="temp">${opts(T, f.temp, 'Any temperature')}</select>
+    <select class="sel sel-sm" data-cf="owner">${opts([['_none', 'No owner']].concat(owners().map(p => [p.id, p.name])), f.owner, 'Any owner')}</select>
+    <select class="sel sel-sm" data-cf="lead">${opts(S.lists.leadSources, f.lead, 'Any lead source')}</select>
+    <select class="sel sel-sm" data-cf="status">${opts(S.lists.status, f.status, 'Any status')}</select>
+    <button class="btn btn-plain btn-sm" data-act="cfclear">Clear</button></div>`;
+  const list = filteredClients();
+  return h + `<p class="small muted">${list.length} shown</p>${clientTable(list)}</div>`;
 }
-
-function peopleTable(list) {
-  var h = '<table><thead><tr><th>Name</th><th>Company</th><th>Tier</th><th>Group</th><th>Last contact</th><th>Temp</th><th>Chases</th></tr></thead><tbody>';
-  list.forEach(function (c) {
-    h += '<tr class="click" data-open="' + esc(c.ID) + '"><td><b>' + esc(c.Name) + '</b><div class="small muted">' + esc(c['Job Title']) + '</div></td><td>' + esc(c.Company) + '</td><td>' + tierTag(c) +
-      '</td><td class="small">' + esc(c.Group) + '</td><td>' + lastLine(c) + '</td><td>' + chip(temp(c)) + (owesReply(c) ? ' <span class="small" style="color:var(--pink);font-weight:700">reply owed</span>' : '') +
-      '</td><td>' + (chases(c) || '') + '</td></tr>';
-  });
-  return h + '</tbody></table>';
+function lastLine(c) { const e = effective(c); return e.date ? `${uk(e.date)} <span class="muted small">(${e.source})</span>` : '<span class="muted">-</span>'; }
+function clientTable(list) {
+  if (!list.length) return '<div class="empty">Nobody matches.</div>';
+  return `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Company</th><th>Tier</th><th>Owner</th><th>Last contact</th><th>Temperature</th><th>Chases</th></tr></thead><tbody>${list.map(c => `<tr class="click" data-open="${esc(c.ID)}">
+    <td><b>${esc(c.Name)}</b><div class="small muted">${esc(c['Job Title'])}</div></td>
+    <td>${esc(c.Company)}${c['Client code'] ? ` <span class="small muted">${esc(c['Client code'])}</span>` : ''}</td><td>${tierTag(c)}</td><td>${av(c.Owner)}</td><td>${lastLine(c)}</td>
+    <td>${tchip(temp(c))}${owesReply(c) ? ' <span class="small strong" style="color:var(--red)">reply owed</span>' : ''}</td><td>${chases(c) || ''}</td></tr>`).join('')}</tbody></table></div>`;
 }
-
 function vCompanies() {
-  var m = {};
-  S.clients.forEach(function (c) { var k = (c.Company || 'No company').trim(); (m[k] = m[k] || []).push(c); });
-  var rank = { Warm: 0, Cooling: 1, Cold: 2, 'No date': 3 };
-  var cos = Object.keys(m).map(function (k) {
-    var ppl = m[k], best = ppl.map(temp).sort(function (a, b) { return rank[a] - rank[b]; })[0];
-    var last = ppl.map(function (c) { return effective(c).date; }).filter(Boolean).sort().pop() || '';
-    return { name: k, ppl: ppl, best: best, warm: best === 'Warm', last: last };
+  const m = {}; clients().forEach(c => { const k = (c.Company || 'No company').trim(); (m[k] = m[k] || []).push(c); });
+  const rank = { Warm: 0, Cooling: 1, Cold: 2, 'No date': 3 };
+  const cos = Object.keys(m).map(k => {
+    const ppl = m[k], best = ppl.map(temp).sort((a, b) => rank[a] - rank[b])[0];
+    const last = ppl.map(c => effective(c).date).filter(Boolean).sort().pop() || '';
+    const code = ppl.map(c => c['Client code']).find(Boolean) || codeFor(k);
+    return { name: k, ppl, best, warm: best === 'Warm', last, code };
   });
-  cos.sort(function (a, b) { return (a.warm - b.warm) || (rank[b.best] - rank[a.best]) || a.name.localeCompare(b.name); });
-  var cold = cos.filter(function (c) { return !c.warm; }).length;
-  var h = '<h2>By company</h2><p class="sub">' + cos.length + ' companies. ' + cold + ' have nobody warm, listed first.</p>';
-  cos.forEach(function (co) {
-    h += '<details class="company card"><summary><b class="grow">' + esc(co.name) + '</b><span class="small muted">' + co.ppl.length + ' ' + (co.ppl.length === 1 ? 'person' : 'people') +
-      (co.last ? ', last contact ' + uk(co.last) : '') + '</span>' + chip(co.warm ? 'Warm' : co.best) + '</summary>' + peopleTable(co.ppl) + '</details>';
-  });
-  return h;
+  cos.sort((a, b) => (a.warm - b.warm) || (rank[b.best] - rank[a.best]) || a.name.localeCompare(b.name));
+  const cold = cos.filter(c => !c.warm).length;
+  return clientBand('By company', `${cos.length} client companies. ${cold} have nobody warm, so they come first.`) + '<div class="pad">' + cos.map(co =>
+    `<details class="co card"><summary><b class="grow">${esc(co.name)}${co.code ? ` <span class="small muted">${esc(co.code)}</span>` : ''}</b><span class="small muted">${co.ppl.length} ${co.ppl.length === 1 ? 'person' : 'people'}${co.last ? ', last contact ' + uk(co.last) : ''}</span>${tchip(co.warm ? 'Warm' : co.best)}</summary>${clientTable(co.ppl)}</details>`).join('') + '</div>';
+}
+function vTesti() {
+  const cand = clients().filter(c => !c.Testimonial && temp(c) === 'Warm');
+  const cols = [['Candidates', cand, 'To ask'], ['To ask', null, 'Asked'], ['Asked', null, 'Received'], ['Received', null, '']];
+  return clientBand('Testimonials', 'Candidates are warm clients with no testimonial status yet.') + '<div class="pad"><div class="cols4">' + cols.map(col => {
+    const list = col[1] || clients().filter(c => c.Testimonial === col[0]);
+    return `<div><div class="k-col-h" style="padding-left:0">${esc(col[0])} <span class="n">${list.length}</span></div>${list.map(c => `<div class="mini"><span class="name" data-open="${esc(c.ID)}">${esc(c.Name)}</span> ${tierTag(c)}<div class="small muted">${esc(c.Company)}</div>
+      ${col[2] ? `<div class="row" style="margin-top:8px"><button class="btn btn-soft btn-sm" data-testi="${col[2]}" data-id="${esc(c.ID)}">Mark ${col[2].toLowerCase()}</button>${col[0] === 'Candidates' ? `<button class="btn btn-plain btn-sm" data-testi="Not suitable" data-id="${esc(c.ID)}">Not suitable</button>` : ''}</div>` : ''}</div>`).join('')}</div>`;
+  }).join('') + '</div></div>';
 }
 
-function vTesti() {
-  var cand = S.clients.filter(function (c) {
-    return !c.Testimonial && (c.Group === 'Active Clients' || c.Reconnect === 'Positive Reply') && temp(c) === 'Warm';
-  });
-  var cols = [['Candidates', cand, 'To ask'], ['To ask', null, 'Asked'], ['Asked', null, 'Received'], ['Received', null, '']];
-  var h = '<h2>Testimonials</h2><p class="sub">Candidates are warm Active Clients or Positive Replies with no testimonial status yet.</p><div class="cols">';
-  cols.forEach(function (col) {
-    var list = col[1] || S.clients.filter(function (c) { return c.Testimonial === col[0]; });
-    h += '<div class="col"><h3>' + col[0] + ' <span class="muted">' + list.length + '</span></h3>';
-    list.forEach(function (c) {
-      h += '<div class="mini"><span class="name" data-open="' + esc(c.ID) + '">' + esc(c.Name) + '</span> ' + tierTag(c) +
-        '<div class="small muted">' + esc(c.Company) + '</div>' +
-        (col[2] ? '<div class="row" style="margin-top:6px"><button data-testi="' + col[2] + '" data-id="' + esc(c.ID) + '">Mark ' + col[2].toLowerCase() + '</button>' +
-          (col[0] === 'Candidates' ? '<button class="ghost" data-testi="Not suitable" data-id="' + esc(c.ID) + '">Not suitable</button>' : '') + '</div>' : '') + '</div>';
-    });
-    h += '</div>';
+/* ============ To sort ============ */
+function vSort() {
+  const list = unsorted(), groups = {};
+  list.forEach(c => { const g = c['Old group'] || 'No group'; (groups[g] = groups[g] || []).push(c); });
+  let h = band('Tools', 'To sort', `${list.length} ${list.length === 1 ? 'person is' : 'people are'} not marked as a prospect or a client yet. Pick one for each, or do a whole group at once. Their old group from 1.x is shown as a hint.`) + '<div class="pad">';
+  if (!list.length) return h + '<div class="empty">Everyone is sorted. Lovely.</div></div>';
+  Object.keys(groups).sort((a, b) => groups[b].length - groups[a].length).forEach(g => {
+    const ppl = groups[g].sort((a, b) => String(a.Name).localeCompare(String(b.Name)));
+    h += `<div class="card sort-grp" data-sgrp="${esc(g)}"><div class="sort-grp-h"><b class="grow">${esc(g)} <span class="muted small">${ppl.length}</span></b>
+      <button class="btn btn-pink btn-sm" data-sortall="Prospect" data-g="${esc(g)}">All ${ppl.length} to Prospects</button><button class="btn btn-green btn-sm" data-sortall="Client" data-g="${esc(g)}">All ${ppl.length} to Clients</button></div>` +
+      ppl.map(c => `<div class="sort-row" data-srow="${esc(c.ID)}"><div class="grow"><span class="name" data-open="${esc(c.ID)}">${esc(c.Name)}</span> ${tierTag(c)}<div class="small muted">${esc([c['Job Title'], c.Company].filter(Boolean).join(', '))}</div></div>
+        ${av(c.Owner)}<button class="btn btn-pink btn-sm" data-sortone="Prospect" data-id="${esc(c.ID)}">Prospect</button><button class="btn btn-green btn-sm" data-sortone="Client" data-id="${esc(c.ID)}">Client</button>
+        <button class="btn btn-plain btn-sm" data-archive="${esc(c.ID)}">Archive</button></div>`).join('') + '</div>';
   });
   return h + '</div>';
 }
+function setType(ids, type) {
+  const cs = ids.map(byId).filter(Boolean); if (!cs.length) return;
+  const before = cs.map(c => Object.assign({}, c));
+  const rows = ids.map(id => $(`[data-srow="${CSS.escape(id)}"]`)).filter(Boolean);
+  cs.forEach(c => { c.Type = type; if (type === 'Client') c['Prospect status'] = ''; });
+  leaveRows(rows, () => { renderView(); });
+  toast(cs.length === 1 ? `${cs[0].Name} is now a ${type.toLowerCase()}` : `${cs.length} people are now ${type.toLowerCase()}s`);
+  write('bulk', { ids, fields: { Type: type } }).then(d => mergeContacts(d.contacts)).catch(e => {
+    before.forEach(b => { const c = byId(b.ID); if (c) Object.assign(c, b); }); renderView(); toast('Not saved: ' + e.message, true);
+  });
+}
+function leaveRows(rows, done) {
+  rows.forEach(r => r.classList.add('leaving'));
+  setTimeout(() => { rows.forEach(r => r.remove()); updateCounts(); if (done) done(); }, rows.length ? 300 : 0);
+}
 
-function unsorted() { return S.clients.filter(function (c) { return c.Group === 'To be sorted'; }); }
-function tidyName(n) { var m = /^([^,]+),\s*([^,]+)$/.exec(String(n || '').trim()); return m ? m[2].trim() + ' ' + m[1].trim() : String(n || '').trim(); }
-
-/* Quiet note when other people from the same company are already known */
+/* ============ Recent meetings ============ */
+async function loadMeetings() {
+  if (S.meet.loading) return; S.meet.loading = true;
+  try {
+    const d = await api('meetings', { scope: S.meet.scope });
+    Object.assign(S.meet, { list: d.list || [], ignored: d.ignored || { emails: [], domains: [] }, days: d.days, problems: d.problems || [], err: '', loaded: true });
+  } catch (e) { S.meet.err = e.message; S.meet.loaded = true; }
+  S.meet.loading = false;
+  if (S.view === 'meetings' && !typing()) renderView(); else updateCounts();
+}
+function addAsFields(v) {
+  const [t, x] = String(v || '').split('|');
+  if (t === 'P') return { Type: 'Prospect', 'Prospect status': x || '' };
+  if (t === 'C') return { Type: 'Client', Tier: x || '' };
+  return null;
+}
+const defOwner = () => (S.me && S.me.owner ? S.me.id : '');
 function coNote(x) {
-  var co = String(x.company || '').toLowerCase().trim();
-  var same = function (c) { return (co && String(c.Company || '').toLowerCase().trim() === co) || (!x.freeMail && String(c.Email || '').toLowerCase().split('@')[1] === x.domain); };
-  var onB = S.clients.filter(same).length, inA = S.archive.filter(same).length, name = x.company || x.domain;
+  const co = norm(x.company);
+  const same = c => (co && norm(c.Company) === co) || (!x.freeMail && String(c.Email || '').toLowerCase().split('@')[1] === x.domain);
+  const onB = S.contacts.filter(same).length, inA = S.archive.filter(same).length, name = x.company || x.domain;
   if (!onB && !inA) return '';
-  var text = onB ? onB + (onB === 1 ? ' other' : ' others') + ' from ' + name + ' on the board' : 'Others from ' + name + ' are in the Archive';
-  return '<div class="conote" data-co-q="' + esc(x.company || x.domain) + '">' + esc(text) + '</div>';
+  return `<div class="conote" data-coq="${esc(x.company || x.domain)}">${esc(onB ? onB + (onB === 1 ? ' other person' : ' others') + ' from ' + name + ' on the radar' : 'Others from ' + name + ' are in the Archive')}</div>`;
 }
-
-/* The Ignored list lives in its own box so it can be redrawn without wiping what you are typing in the rows above */
 function ignHtml() {
-  var m = S.meet;
-  if (!(m.loaded && !m.err)) return '';
-  var ig = m.ignored.emails.map(function (e) { return ['email', e]; }).concat(m.ignored.domains.map(function (d) { return ['domain', d]; }));
-  var h = '<h3>Ignored (' + ig.length + ')</h3>';
-  if (!ig.length) h += '<p class="small muted">Nothing ignored yet. Suppliers and recruiters you ignore appear here, and you can undo it.</p>';
-  else h += '<div class="card small">' + ig.map(function (x) {
-    return '<div class="row" style="padding:3px 0"><span class="grow">' + esc(x[1]) + ' <span class="muted">(' + (x[0] === 'domain' ? 'everyone at this company' : 'person') + ')</span></span>' +
-      '<button class="ghost" data-unign="' + x[0] + '" data-v="' + esc(x[1]) + '">Undo</button></div>';
-  }).join('') + '</div>';
-  return h;
+  const m = S.meet; if (!m.loaded || m.err) return '';
+  const ig = m.ignored.emails.map(e => ['email', e]).concat(m.ignored.domains.map(d => ['domain', d]));
+  return `<h3 style="margin:24px 0 8px">Ignored (${ig.length})</h3>` + (!ig.length ? '<p class="small muted">Nothing ignored yet. Suppliers and recruiters you ignore appear here, and you can undo it.</p>' :
+    `<div class="card small">${ig.map(x => `<div class="row" style="padding:3px 0"><span class="grow">${esc(x[1])} <span class="muted">(${x[0] === 'domain' ? 'everyone at this company' : 'person'})</span></span><button class="btn btn-plain btn-sm" data-unign="${x[0]}" data-v="${esc(x[1])}">Undo</button></div>`).join('')}</div>`);
 }
-
 function vMeetings() {
-  var m = S.meet, h = '<h2>Recent meetings</h2><p class="sub">External people from your calendar in the last ' + m.days + ' days who are not on the board or in the Archive. Nothing is saved until you click Add.</p>';
-  if (m.err) {
-    h += '<div class="warn"><b>Could not read your calendar.</b><br>' + esc(m.err) + '<div class="small" style="margin-top:6px">If this is the first time, open the Apps Script editor, run <b>authorize</b>, then Deploy &gt; Manage deployments &gt; pencil &gt; New version &gt; Deploy.</div></div>';
-  } else if (!m.loaded) {
-    h += '<p class="muted">Reading your calendar…</p>';
-  } else {
-    h += '<div class="card">';
-    if (!m.list.length) h += '<p>Nobody new from your recent meetings.</p>';
-    m.list.forEach(function (x) {
-      h += '<div data-m-row="' + esc(x.email) + '" style="padding:12px 0;border-bottom:1px solid var(--line)">' +
-        '<div class="small muted">' + esc(x.email) + '</div>' +
-        '<div class="small">' + esc(x.title) + ', ' + uk(x.date) + (x.count > 1 ? ' (' + x.count + ' meetings)' : '') + '</div>' + coNote(x) +
-        '<div class="row" style="margin-top:8px">' +
-        '<input data-m-name value="' + esc(tidyName(x.name)) + '" placeholder="Name" style="width:170px;font-weight:700">' +
-        '<input data-m-co value="' + esc(x.company) + '" placeholder="Company" style="width:170px">' +
-        '<select data-m-tier style="width:auto">' + opts(['A', 'B', 'C'], '', 'Tier') + '</select>' +
-        '<select data-m-group style="width:auto">' + opts(GROUPS.filter(function (g) { return g !== 'To be sorted'; }), '', 'Group') + '</select>' +
-        '<button class="pink" data-m-add="1" data-e="' + esc(x.email) + '">Add</button>' +
-        '<span class="grow"></span><span class="small muted">Not relevant:</span>' +
-        '<button class="ghost" data-m-ign="email" data-e="' + esc(x.email) + '">This person</button>' +
-        (x.freeMail ? '' : '<button class="ghost" data-m-ign="domain" data-e="' + esc(x.email) + '">Everyone at ' + esc(x.domain) + '</button>') +
-        '</div></div>';
+  const m = S.meet, many = S.people.filter(p => p.calendar).length > 1;
+  let h = band('Tools', 'Recent meetings', `External people from ${m.scope === 'all' ? 'everyone\'s calendars' : 'your calendar'} in the last ${m.days} days who are not on the radar or in the Archive. Nothing is saved until you press Add.`) + '<div class="pad">';
+  if (many) h += `<div class="row" style="margin-bottom:14px"><div class="seg"><button class="${m.scope === 'mine' ? 'on' : ''}" data-mscope="mine">My meetings</button><button class="${m.scope === 'all' ? 'on' : ''}" data-mscope="all">Everyone's meetings</button></div></div>`;
+  m.problems.forEach(p => { h += `<div class="notice warn">${esc(p)}</div>`; });
+  if (m.err) h += `<div class="notice warn"><div><b>Could not read the calendar.</b><br>${esc(m.err)}<div class="small" style="margin-top:6px">If this is the first time, open Apps Script, run <b>authorize</b>, then Deploy, Manage deployments, pencil, New version, Deploy.</div></div></div>`;
+  else if (!m.loaded || m.loading) h += '<div class="empty">Reading the calendar</div>';
+  else {
+    h += '<div class="card">' + (m.list.length ? '' : '<div class="empty">Nobody new from recent meetings.</div>');
+    m.list.forEach(x => {
+      h += `<div class="m-row" data-mrow="${esc(x.email)}">
+        <div class="row"><span class="small muted grow">${esc(x.email)}</span>${m.scope === 'all' ? (x.metBy || []).map(id => av(id)).join('') : ''}</div>
+        <div class="small">${esc(x.title)}, ${uk(x.date)}${x.count > 1 ? ` (${x.count} meetings)` : ''}</div>${coNote(x)}
+        <div class="row" style="margin-top:8px">
+          <input class="inp" data-mname value="${esc(x.name)}" placeholder="Name" style="width:170px;font-weight:700">
+          <input class="inp" data-mco value="${esc(x.company)}" placeholder="Company" list="coList" style="width:170px">
+          <select class="sel" data-mas style="width:auto">${opts(ADD_AS, '', 'Add as...')}</select>
+          <select class="sel" data-mown style="width:auto" title="Who owns the relationship">${ownerOpts(x.metBy && x.metBy.length === 1 && person(x.metBy[0]) && person(x.metBy[0]).owner ? x.metBy[0] : defOwner())}</select>
+          <select class="sel" data-mlead style="width:auto">${opts(S.lists.leadSources, '', 'Lead source')}</select>
+          <button class="btn btn-primary" data-madd="${esc(x.email)}">Add</button>
+          <span class="grow"></span><span class="small muted">Not relevant:</span>
+          <button class="btn btn-plain btn-sm" data-mign="email" data-e="${esc(x.email)}">This person</button>
+          ${x.freeMail ? '' : `<button class="btn btn-plain btn-sm" data-mign="domain" data-e="${esc(x.email)}">Everyone at ${esc(x.domain)}</button>`}
+        </div></div>`;
     });
     h += '</div>';
   }
-  var uns = unsorted();
-  if (uns.length) {
-    h += '<h3>Still to sort (' + uns.length + ')</h3><p class="small muted">Already in the sheet but with no group yet. They stay out of Today until sorted.</p><div class="card">';
-    uns.forEach(function (c) {
-      h += '<div class="row" style="padding:8px 0;border-bottom:1px solid var(--line)"><div class="grow"><span class="name" data-open="' + esc(c.ID) + '">' + esc(c.Name) + '</span>' +
-        '<div class="small muted">' + esc([c['Job Title'], c.Company, c.Email].filter(Boolean).join(', ')) + '</div></div>' +
-        '<select style="width:auto" data-sort-tier="' + esc(c.ID) + '">' + opts(['A', 'B', 'C'], tierOf(c), 'Tier') + '</select>' +
-        '<select style="width:auto" data-sort-group="' + esc(c.ID) + '">' + opts(GROUPS.filter(function (g) { return g !== 'To be sorted'; }), '', 'Group') + '</select>' +
-        '<button class="primary" data-sort-save="' + esc(c.ID) + '">Save</button>' +
-        '<button class="ghost" data-archive="' + esc(c.ID) + '">Archive</button></div>';
-    });
-    h += '</div>';
-  }
-  h += '<div id="ignBox">' + ignHtml() + '</div>';
-  return h;
+  return h + `<div id="ignBox">${ignHtml()}</div></div>`;
 }
-
-function vAdd() {
-  return '<h2>Add people</h2><p class="sub">New people land in "To be sorted" and show under Still to sort in Recent meetings.</p>' +
-    '<div class="card" style="margin-bottom:16px"><h3 style="margin-top:0">One person</h3><div class="fields">' +
-    '<div><label>Name</label><input id="aName"></div><div><label>Company</label><input id="aCompany"></div>' +
-    '<div><label>Job title</label><input id="aTitle"></div><div><label>Email</label><input id="aEmail"></div>' +
-    '<div class="full"><label>LinkedIn</label><input id="aLi"></div></div>' +
-    '<div style="height:10px"></div><button class="primary" id="addOneCheck">Check and add</button></div>' +
-    '<div class="card"><h3 style="margin-top:0">Paste a list</h3><p class="small muted">One person per line: Name, Company, Title. Emails anywhere on the line are picked up, and the company is taken from a work email if you leave it out.</p>' +
-    '<textarea id="aList" style="min-height:140px" placeholder="Jane Smith, Acme, Head of Brand, jane@acme.com"></textarea>' +
-    '<div style="height:10px"></div><button class="primary" id="addListCheck">Check list</button></div>' +
-    '<div id="addPreview"></div>';
-}
-
-function vArchive() {
-  var h = '<h2>Archive</h2><p class="sub">' + S.archive.length + ' people removed from the board.</p>';
-  h += '<input id="archQ" placeholder="Search" style="max-width:260px;margin-bottom:10px"><table><thead><tr><th>Name</th><th>Company</th><th>Group</th><th></th></tr></thead><tbody>';
-  S.archive.slice().sort(function (a, b) { return (a.Name || '').localeCompare(b.Name || ''); }).forEach(function (c) {
-    h += '<tr data-arch-row="' + esc((c.Name + ' ' + c.Company).toLowerCase()) + '"><td><b>' + esc(c.Name) + '</b><div class="small muted">' + esc(c['Job Title']) + '</div></td><td>' + esc(c.Company) + '</td><td class="small">' + esc(c.Group) +
-      '</td><td><button data-restore="' + esc(c.ID) + '">Restore</button></td></tr>';
-  });
-  return h + '</tbody></table>';
-}
-
-/* ============ Drawer ============ */
-function openDrawer(id, keepScroll) {
-  var c = byId(id);
-  if (!c) { closeDrawer(); return; }
-  S.openId = id;
-  var e = effective(c), gmailQ = c.Email ? 'from:' + c.Email + ' OR to:' + c.Email : '"' + c.Name + '"';
-  var src = [['Manual', c['Last contacted']], ['Email', c['Last email']]];
-  var h = '<div class="row"><h2 class="grow">' + esc(c.Name) + '</h2><button class="ghost" id="dClose">Close</button></div>' +
-    '<div class="row small" style="margin:6px 0 4px">' + tierTag(c) + chip(temp(c)) + (owesReply(c) ? '<span style="color:var(--pink);font-weight:700">Reply owed</span>' : '') + '<span class="muted">' + esc(c.ID) + '</span></div>' +
-    '<div class="sources">' + src.map(function (s) {
-      return '<div class="' + (s[0] === e.source ? 'best' : '') + '"><span>' + s[0] + (s[0] === 'Email' && c['Last email from'] ? ' (from ' + esc(c['Last email from']) + ')' : '') + '</span><span>' + (uk(s[1]) || '-') + '</span></div>';
-    }).join('') +
-    '<div><span>Chases with no reply</span><span>' + chases(c) + '</span></div>' +
-    (tierOf(c) === 'A' || tierOf(c) === 'B' ? '' : '<div class="muted small">Email is not auto-tracked for this tier.</div>') + '</div>' +
-    '<div class="row" style="margin-bottom:14px"><button data-touch="spoke" data-id="' + esc(c.ID) + '">Spoke today</button>' +
-    '<a href="https://mail.google.com/mail/u/0/#search/' + encodeURIComponent(gmailQ) + '" target="_blank" rel="noopener"><button class="ghost">Search Gmail</button></a>' +
-    (c.LinkedIn && /^https?:\/\//.test(c.LinkedIn) ? '<a href="' + esc(c.LinkedIn) + '" target="_blank" rel="noopener"><button class="ghost">LinkedIn</button></a>' : '') + '</div>' +
-    '<div class="fields">' +
-    fld('Name', c) + fld('Company', c) + fld('Job Title', c) +
-    sel('Tier', c, ['A', 'B', 'C']) + sel('Group', c, GROUPS, true) + sel('Owner', c, OWNERS) +
-    '<div><label>Last contacted (DD/MM/YYYY)</label><input data-f="Last contacted" value="' + esc(uk(c['Last contacted'])) + '"></div>' +
-    sel('Reconnect', c, RECONNECT) + sel('Status', c, STATUS) + sel('Testimonial', c, TESTI) +
-    fld('Email', c, true) + fld('LinkedIn', c, true) +
-    '<div class="full"><label>Note</label><textarea data-f="Note">' + esc(c.Note) + '</textarea></div></div>' +
-    '<div class="row" style="margin-top:14px"><button class="primary" id="dSave">Save changes</button><span class="grow"></span><button class="ghost" data-archive="' + esc(c.ID) + '">Archive</button></div>';
-  var d = $('#drawer'); d.innerHTML = h; d.classList.add('open');
-  $('#dClose').onclick = closeDrawer;
-  $('#dSave').onclick = saveDrawer;
-  bindIn(d);
-}
-function fld(k, c, full) { return '<div' + (full ? ' class="full"' : '') + '><label>' + k + '</label><input data-f="' + k + '" value="' + esc(c[k]) + '"></div>'; }
-function sel(k, c, list, full) {
-  var v = c[k] || '', l = list.indexOf(v) < 0 && v ? list.concat([v]) : list;
-  return '<div' + (full ? ' class="full"' : '') + '><label>' + k + '</label><select data-f="' + k + '">' + opts(l, v, '') + '</select></div>';
-}
-function closeDrawer() { S.openId = null; $('#drawer').classList.remove('open'); }
-function saveDrawer() {
-  var c = byId(S.openId), changes = {}, bad = false;
-  document.querySelectorAll('#drawer [data-f]').forEach(function (el) {
-    var k = el.dataset.f, v = el.value.trim();
-    if (k === 'Last contacted') { var y = fromUk(v); if (y === null) { bad = true; return; } v = y; }
-    if ((c[k] || '') !== v) changes[k] = v;
-  });
-  if (bad) return toast('Use DD/MM/YYYY for the date');
-  if (!Object.keys(changes).length) return toast('Nothing changed');
-  saveFields(c.ID, changes, 'Saved');
-}
-function saveFields(id, changes, msg) {
-  var c = byId(id), before = Object.assign({}, c);
-  Object.assign(c, changes); render();
-  return api('update', { id: id, fields: changes }).then(function () { toast(msg || 'Saved'); })
-    .catch(function (e) { Object.assign(c, before); render(); toast('Not saved: ' + e.message); });
-}
+const meetBy = email => S.meet.list.find(y => y.email === email);
+const sortMeet = () => S.meet.list.sort((a, b) => b.date.localeCompare(a.date) || a.name.localeCompare(b.name));
 
 /* ============ Add people ============ */
-function emailIn(s) { var m = String(s).match(/[A-Za-z0-9._%+'-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/); return m ? m[0].toLowerCase() : ''; }
+function vAdd() {
+  return band('Tools', 'Add people', 'Add one person, or paste a list. Every new person needs to be a prospect or a client.') + `<div class="pad">
+    <div class="card" style="margin-bottom:16px"><h3 style="margin:0 0 12px">One person</h3><div class="grid2">
+      <div class="field"><span class="lbl">Name</span><input class="inp" id="aName"></div>
+      <div class="field"><span class="lbl">Company</span><input class="inp" id="aCompany" list="coList"></div>
+      <div class="field"><span class="lbl">Job title</span><input class="inp" id="aTitle"></div>
+      <div class="field"><span class="lbl">Email</span><input class="inp" id="aEmail" type="email"></div>
+      <div class="field full"><span class="lbl">LinkedIn link</span><input class="inp" id="aLi" placeholder="https://www.linkedin.com/in/..."></div>
+      ${addChoices('a')}
+    </div><div style="height:12px"></div><button class="btn btn-primary" data-act="addone">Check and add</button></div>
+    <div class="card"><h3 style="margin:0 0 6px">Paste a list</h3><p class="small muted" style="margin:0 0 10px">One person per line: Name, Company, Title. Emails anywhere on the line are picked up, and the company is taken from a work email if you leave it out.</p>
+      <textarea class="txt" id="aList" style="min-height:140px" placeholder="Jane Smith, Acme, Head of Brand, jane@acme.com"></textarea>
+      <div class="grid2" style="margin-top:12px">${addChoices('l')}</div>
+      <div style="height:12px"></div><button class="btn btn-primary" data-act="addlist">Check list</button></div>
+    <div id="addPreview"></div></div>`;
+}
+function addChoices(p) {
+  return `<div class="field"><span class="lbl">Add as</span><select class="sel" id="${p}As">${opts(ADD_AS, '', 'Choose...')}</select></div>
+    <div class="field"><span class="lbl">Owner</span><select class="sel" id="${p}Own">${ownerOpts(defOwner())}</select></div>
+    <div class="field"><span class="lbl">Lead source</span><select class="sel" id="${p}Lead">${opts(S.lists.leadSources, '', 'Not known')}</select></div>`;
+}
+const emailIn = s => { const m = String(s).match(/[A-Za-z0-9._%+'-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/); return m ? m[0].toLowerCase() : ''; };
 function companyFromEmail(e) {
-  var d = (e.split('@')[1] || '').toLowerCase();
-  if (!d || FREE_MAIL.indexOf(d) >= 0) return '';
-  var stem = d.replace(/\.(co|com|org|net|ac|gov)\.[a-z]{2}$/, '').replace(/\.[a-z]{2,}$/, '').split('.').pop();
+  const d = (e.split('@')[1] || '').toLowerCase(); if (!d || FREE_MAIL.includes(d)) return '';
+  const stem = d.replace(/\.(co|com|org|net|ac|gov)\.[a-z]{2}$/, '').replace(/\.[a-z]{2,}$/, '').split('.').pop();
   return stem.charAt(0).toUpperCase() + stem.slice(1);
 }
-function normName(s) { return String(s || '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z ]/g, '').replace(/\s+/g, ' ').trim(); }
 function dupeOf(p) {
-  var n = normName(p.Name), e = (p.Email || '').toLowerCase();
-  var hit = function (list, where) {
-    return list.filter(function (c) { return (e && (c.Email || '').toLowerCase() === e) || (n && normName(c.Name) === n); }).map(function (c) { return where + ': ' + c.Name + (c.Company ? ', ' + c.Company : ''); });
-  };
-  return hit(S.clients, 'On the board').concat(hit(S.archive, 'In the archive'));
+  const n = norm(p.Name), e = (p.Email || '').toLowerCase();
+  const hit = (list, where) => list.filter(c => (e && (c.Email || '').toLowerCase() === e) || (n && norm(c.Name) === n)).map(c => where + ': ' + c.Name + (c.Company ? ', ' + c.Company : ''));
+  return hit(S.contacts, 'On the radar').concat(hit(S.archive, 'In the Archive'));
 }
 function parseList(text) {
-  return text.split(/\n/).map(function (line) {
+  return text.split(/\n/).map(line => {
     if (!line.trim()) return null;
-    var email = emailIn(line);
-    var parts = line.replace(email ? new RegExp(email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') : /$^/, '').split(/,|\t/).map(function (s) { return s.replace(/[<>]/g, '').trim(); });
+    const email = emailIn(line);
+    const parts = (email ? line.replace(new RegExp(email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), '') : line).split(/,|\t/).map(s => s.replace(/[<>]/g, '').trim());
     while (parts.length && !parts[parts.length - 1]) parts.pop();
-    var p = { Name: parts[0] || '', Company: parts[1] || '', 'Job Title': parts.slice(2).filter(Boolean).join(', '), Email: email };
+    const p = { Name: parts[0] || '', Company: parts[1] || '', 'Job Title': parts.slice(2).filter(Boolean).join(', '), Email: email };
     if (!p.Company && email) p.Company = companyFromEmail(email);
-    if (!p.Name && email) p.Name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+    if (!p.Name && email) p.Name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     return p.Name ? p : null;
   }).filter(Boolean);
 }
-var pending = [];
-function showPreview(list) {
-  pending = list;
-  var h = '<div class="card" style="margin-top:16px"><h3 style="margin-top:0">Check before adding</h3><table><thead><tr><th></th><th>Name</th><th>Company</th><th>Title</th><th>Email</th><th></th></tr></thead><tbody>';
-  list.forEach(function (p, i) {
-    var d = dupeOf(p);
-    h += '<tr><td><input type="checkbox" data-pick="' + i + '" style="width:auto"' + (d.length ? '' : ' checked') + '></td><td>' + esc(p.Name) + '</td><td>' + esc(p.Company) + '</td><td>' + esc(p['Job Title']) + '</td><td>' + esc(p.Email) + '</td><td class="small">' +
-      (d.length ? '<span style="color:var(--pink);font-weight:700">Possible duplicate</span><br>' + d.map(esc).join('<br>') : '') + '</td></tr>';
+let pending = [];
+function showPreview(list, base) {
+  pending = list.map(p => Object.assign({}, p, base));
+  const lbl = (ADD_AS.find(a => (addAsFields(a[0]) || {}).Type === base.Type && ((base.Type === 'Prospect' ? base['Prospect status'] : base.Tier) || '') === a[0].split('|')[1]) || [, ''])[1];
+  $('#addPreview').innerHTML = `<div class="card" style="margin-top:16px"><h3 style="margin:0 0 4px">Check before adding</h3><p class="small muted" style="margin:0 0 10px">Adding as: <b>${esc(lbl)}</b>, owner ${esc(personName(base.Owner) || 'nobody yet')}${base['Lead source'] ? ', lead source ' + esc(base['Lead source']) : ''}.</p>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th></th><th>Name</th><th>Company</th><th>Title</th><th>Email</th><th></th></tr></thead><tbody>${pending.map((p, i) => { const d = dupeOf(p);
+      return `<tr><td><input type="checkbox" data-pick="${i}"${d.length ? '' : ' checked'}></td><td>${esc(p.Name)}</td><td>${esc(p.Company)}</td><td>${esc(p['Job Title'])}</td><td>${esc(p.Email)}</td><td class="small">${d.length ? '<b style="color:var(--red)">Possible duplicate</b><br>' + d.map(esc).join('<br>') : ''}</td></tr>`; }).join('')}</tbody></table></div>
+    <div style="height:12px"></div><button class="btn btn-primary" data-act="addconfirm">Add ticked people</button></div>`;
+}
+function readChoices(p) {
+  const f = addAsFields($('#' + p + 'As').value);
+  if (!f) { $('#' + p + 'As').focus(); toast('Choose whether they are a prospect or a client first', true); return null; }
+  return Object.assign(f, { Owner: $('#' + p + 'Own').value, 'Lead source': $('#' + p + 'Lead').value });
+}
+
+/* ============ Archive ============ */
+function vArchive() {
+  return band('Tools', 'Archive', `${S.archive.length} people taken off the radar. Restore anyone to bring them back.`) + `<div class="pad">
+    <div class="search" style="margin-bottom:12px"><input class="inp" id="archQ" placeholder="Search the Archive"></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Name</th><th>Company</th><th>Type</th><th></th></tr></thead><tbody>${S.archive.slice().sort((a, b) => String(a.Name).localeCompare(String(b.Name))).map(c => `<tr data-arow="${esc(norm(c.Name + ' ' + c.Company))}">
+      <td><b>${esc(c.Name)}</b><div class="small muted">${esc(c['Job Title'])}</div></td><td>${esc(c.Company)}</td><td>${typechip(c)}</td><td style="text-align:right"><button class="btn btn-plain btn-sm" data-restore="${esc(c.ID)}">Restore</button></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+
+/* ============ contact panel ============ */
+const byId = id => S.contacts.find(c => c.ID === id);
+function mergeContacts(list) { (list || []).forEach(n => { const c = byId(n.ID); if (c) Object.assign(c, n); }); if (!S.dirty) { renderView(); if (S.open) openDrawer(S.open, true); } }
+function drawerArea(type) { return type === 'Prospect' ? 'p' : type === 'Client' ? 'c' : 'n'; }
+function openDrawer(id, keep) {
+  const c = byId(id); if (!c) { closeDrawer(true); if (keep) toast('That person was archived or removed by someone else'); return; }
+  const was = $('#drawer'), body = was && $('.d-body', was), st = keep && body ? body.scrollTop : 0;
+  closeDrawer(true); S.open = id; S.dirty = false;
+  const L = S.lists, e = effective(c), gq = c.Email ? 'from:' + c.Email + ' OR to:' + c.Email : '"' + c.Name + '"';
+  const fld = (k, label, extra = '', full) => `<div class="field${full ? ' full' : ''}"><span class="lbl">${label || k}</span><input class="inp" data-f="${k}" value="${esc(c[k])}" ${extra}></div>`;
+  const sel = (k, label, list, blank, show) => `<div class="field"${show ? ` data-show="${show}"` : ''}><span class="lbl">${label || k}</span><select class="sel" data-f="${k}">${opts(withCur(list, c[k] || ''), c[k] || '', blank)}</select></div>`;
+  const hist = String(c['Job history'] || '').split('\n').filter(Boolean);
+  const upd = c.Updated ? `Last change ${uk(c.Updated)}${c['Updated by'] ? ' by ' + esc(personName(c['Updated by'])) : ''}.` : '';
+  const sc = document.createElement('div'); sc.className = 'scrim'; sc.id = 'scrim'; sc.onclick = () => requestClose();
+  const d = document.createElement('aside'); d.className = 'drawer'; d.id = 'drawer'; d.dataset.area = drawerArea(c.Type);
+  d.innerHTML = `<div class="d-head"><div class="row" style="flex-wrap:nowrap"><div class="grow"><div class="k" id="dKind">${isProspect(c) ? 'Prospect' : isClient(c) ? 'Client' : 'To sort'}</div><h2>${esc(c.Name)}</h2>
+      <div class="small" style="opacity:.9">${esc([c['Job Title'], c.Company].filter(Boolean).join(', '))}</div></div><button class="btn-x" data-act="dclose" title="Close">&times;</button></div></div>
+    <div class="d-body">
+      <div class="row">${isClient(c) ? tierTag(c) + tchip(temp(c)) : ''}${isProspect(c) ? pschip(c['Prospect status']) : ''}${owesReply(c) ? '<span class="small strong" style="color:var(--red)">Reply owed</span>' : ''}${av(c.Owner)}<span class="small muted">${esc(personName(c.Owner) || 'No owner yet')}</span></div>
+      <div class="row"><button class="btn btn-soft btn-sm" data-touch="${esc(c.ID)}">Spoke today</button>
+        <a class="btn btn-plain btn-sm" href="https://mail.google.com/mail/u/0/#search/${encodeURIComponent(gq)}" target="_blank" rel="noopener noreferrer">Search Gmail</a>
+        ${c.LinkedIn && /^https?:\/\//i.test(c.LinkedIn) ? `<a class="btn btn-plain btn-sm" href="${esc(c.LinkedIn)}" target="_blank" rel="noopener noreferrer">LinkedIn</a>` : ''}
+        ${isProspect(c) ? `<button class="btn btn-green btn-sm" data-act="makeclient">Make client</button>` : ''}</div>
+      <div class="facts"><div class="${e.source === 'Manual' ? 'best' : ''}"><span>Last spoke (logged by hand)</span><span>${uk(c['Last contacted']) || '-'}</span></div>
+        <div class="${e.source === 'Email' ? 'best' : ''}"><span>Last email${c['Last email from'] ? ' (from ' + esc(c['Last email from']) + ')' : ''}</span><span>${uk(c['Last email']) || '-'}</span></div>
+        <div><span>Chases with no reply</span><span>${chases(c)}</span></div>
+        ${tierOf(c) === 'A' || tierOf(c) === 'B' ? '' : '<div class="muted small">Email is only tracked for A and B tier.</div>'}</div>
+      <div class="sec"><span class="lbl" style="margin:0">Type</span></div>
+      <div class="typeseg"><button class="p${isProspect(c) ? ' on' : ''}" data-type="Prospect">Prospect</button><button class="c${isClient(c) ? ' on' : ''}" data-type="Client">Client</button></div>
+      <input type="hidden" data-f="Type" value="${esc(c.Type || '')}">
+      <div class="grid2">
+        ${sel('Prospect status', 'Status', L.prospectStatus, 'No status yet', 'Prospect')}
+        ${sel('Tier', 'Tier', L.tiers, 'No tier', 'Client')}
+        ${sel('Lead source', 'Lead source', L.leadSources, 'Not known')}
+        <div class="field"><span class="lbl">Owner</span><select class="sel" data-f="Owner">${ownerOpts(c.Owner || '')}</select></div>
+      </div>
+      <div class="sec"><span class="lbl" style="margin:0">Details</span></div>
+      <div class="grid2">
+        ${fld('Name')}
+        <div class="field"><span class="lbl">Company</span><input class="inp" data-f="Company" value="${esc(c.Company)}" list="coList"><span class="small muted" style="margin-top:4px" id="dCode">${c['Client code'] ? 'Client code ' + esc(c['Client code']) + ' (from BOARD)' : 'No client code yet'}</span></div>
+        ${fld('Job Title', 'Job title')}
+        <div class="field"><span class="lbl">Last spoke (DD/MM/YYYY)</span><input class="inp" data-f="Last contacted" value="${esc(uk(c['Last contacted']))}" placeholder="DD/MM/YYYY"></div>
+        ${fld('Email', '', 'type="email"', true)}${fld('LinkedIn', 'LinkedIn link', 'placeholder="https://www.linkedin.com/in/..."', true)}
+        ${sel('Reconnect', '', L.reconnect, '-', 'Client')}${sel('Status', '', L.status, '-', 'Client')}${sel('Testimonial', '', L.testimonial, '-', 'Client')}
+        <div class="field full"><span class="lbl">Note</span><textarea class="txt" data-f="Note">${esc(c.Note)}</textarea></div>
+      </div>
+      ${hist.length ? `<div class="sec"><span class="lbl" style="margin:0">Job history</span></div><div class="facts">${hist.map(x => `<div><span>${esc(x)}</span></div>`).join('')}</div>` : ''}
+      <div class="small muted">${esc(c.ID)}${c.Added ? '. Added ' + uk(c.Added) : ''}${c['Old group'] ? '. Old group: ' + esc(c['Old group']) : ''}. ${upd}</div>
+    </div>
+    <div class="d-foot"><button class="btn btn-primary" data-act="dsave" id="dSave" disabled>Save changes</button><span class="small muted" id="dState">No changes</span><span class="grow"></span><button class="btn btn-plain btn-sm" data-archive="${esc(c.ID)}">Archive</button></div>`;
+  document.body.appendChild(sc); document.body.appendChild(d);
+  showByType(d, c.Type || '');
+  if (st) $('.d-body', d).scrollTop = st;
+}
+function showByType(d, type) {
+  d.dataset.area = drawerArea(type);
+  $$('[data-show]', d).forEach(el => { el.hidden = el.dataset.show !== type; });
+  $$('.typeseg button', d).forEach(b => b.classList.toggle('on', b.dataset.type === type));
+  $('#dKind').textContent = type === 'Prospect' ? 'Prospect' : type === 'Client' ? 'Client' : 'To sort';
+}
+function markDirty() { S.dirty = true; const b = $('#dSave'), s = $('#dState'); if (b) b.disabled = false; if (s) s.textContent = 'Unsaved changes'; }
+function closeDrawer(force) { $('#drawer') && $('#drawer').remove(); $('#scrim') && $('#scrim').remove(); S.open = null; S.dirty = false; if (!force && S.stale) softRender(); }
+async function requestClose() { if (S.dirty && !await confirmBox('You have changes that are not saved. Close without saving?', 'Close without saving', true)) return; closeDrawer(); }
+function saveDrawer() {
+  const d = $('#drawer'), c = byId(S.open); if (!d || !c) return;
+  const changes = {};
+  let bad = '';
+  $$('[data-f]', d).forEach(el => {
+    const wrap = el.closest('[data-show]'); if (wrap && wrap.hidden) return;
+    const k = el.dataset.f; let v = el.value.trim();
+    if (k === 'Last contacted') { const y = fromUk(v); if (y === null) { bad = 'Use DD/MM/YYYY for the date.'; return; } v = y; }
+    if (k === 'Name' && !v) { bad = 'A contact needs a name.'; return; }
+    if (k === 'LinkedIn' && v && !/^https?:\/\//i.test(v)) v = 'https://' + v;
+    if ((c[k] || '') !== v) changes[k] = v;
   });
-  h += '</tbody></table><div style="height:10px"></div><button class="pink" id="addConfirm">Add ticked people</button></div>';
-  $('#addPreview').innerHTML = h;
-  $('#addConfirm').onclick = function () {
-    var rows = pending.filter(function (p, i) { var cb = document.querySelector('[data-pick="' + i + '"]'); return cb && cb.checked; })
-      .map(function (p) { return Object.assign({ Group: 'To be sorted' }, p); });
-    if (!rows.length) return toast('Nobody ticked');
-    this.disabled = true;
-    this.textContent = 'Adding…';
-    api('add', { rows: rows }).then(function (r) { toast('Added ' + r.added.length); S.view = 'meetings'; return loadAll(); })
-      .catch(function (e) { toast('Not added: ' + e.message); });
+  if (bad) return toast(bad, true);
+  if (!Object.keys(changes).length) { S.dirty = false; $('#dState').textContent = 'No changes'; $('#dSave').disabled = true; return; }
+  S.dirty = false;
+  saveFields(c.ID, changes, 'Saved');
+}
+function saveFields(id, changes, msg) {
+  const c = byId(id); if (!c) return Promise.resolve();
+  const before = Object.assign({}, c);
+  Object.assign(c, changes);
+  if (changes.Type === 'Client') c['Prospect status'] = '';
+  renderView(); if (S.open === id) openDrawer(id, true);
+  return write('update', { id, fields: changes }).then(d => {
+    if (d && d.contact) Object.assign(c, d.contact);
+    if (!S.dirty) { renderView(); if (S.open === id) openDrawer(id, true); }
+    if (msg) toast(msg);
+  }).catch(e => { Object.assign(c, before); renderView(); if (S.open === id) openDrawer(id, true); toast('Not saved: ' + e.message, true); });
+}
+
+/* ============ modals ============ */
+function openModal(html) {
+  closeModal();
+  const s = document.createElement('div'); s.className = 'scrim m'; s.id = 'mScrim';
+  const m = document.createElement('div'); m.className = 'modal'; m.id = 'modal'; m.setAttribute('role', 'dialog'); m.innerHTML = html;
+  document.body.appendChild(s); document.body.appendChild(m);
+  return m;
+}
+function closeModal() { $('#modal') && $('#modal').remove(); $('#mScrim') && $('#mScrim').remove(); }
+function confirmBox(msg, ok = 'Yes', danger = false) {
+  return new Promise(res => {
+    const m = openModal(`<h3>Are you sure?</h3><div>${esc(msg)}</div><div class="acts"><button class="btn btn-plain" data-r="0">Cancel</button><button class="btn ${danger ? 'btn-danger' : 'btn-primary'}" data-r="1">${esc(ok)}</button></div>`);
+    m.addEventListener('click', e => { const b = e.target.closest('[data-r]'); if (b) { closeModal(); res(b.dataset.r === '1'); } });
+    $('#mScrim').addEventListener('click', () => { closeModal(); res(false); });
+  });
+}
+function myPass() {
+  const m = openModal(`<h3>Change my passcode</h3><div class="muted small">12 or more characters. A few words strung together works well. Changing it signs you out on your other devices.</div>
+    <div class="field"><span class="lbl">Current passcode</span><input class="inp" id="mpCur" type="password" autocomplete="current-password"></div>
+    <div class="field"><span class="lbl">New passcode</span><input class="inp" id="mpNew" type="password" autocomplete="new-password"></div>
+    <div class="field"><span class="lbl">New passcode again</span><input class="inp" id="mpNew2" type="password" autocomplete="new-password"></div>
+    <div class="err" id="mpErr"></div><div class="acts"><button class="btn btn-plain" data-act="mclose">Cancel</button><button class="btn btn-primary" id="mpGo">Change passcode</button></div>`);
+  $('#mpGo', m).onclick = async () => {
+    const cur = $('#mpCur', m).value, nx = $('#mpNew', m).value, er = $('#mpErr', m);
+    if (nx.length < 12) { er.textContent = 'The new passcode needs 12 or more characters.'; return; }
+    if (nx !== $('#mpNew2', m).value) { er.textContent = 'The two new passcodes do not match.'; return; }
+    $('#mpGo', m).disabled = true;
+    try { await api('passcode', { current: cur, next: nx }); closeModal(); toast('Passcode changed'); }
+    catch (x) { er.textContent = x.message; $('#mpGo', m).disabled = false; }
   };
 }
-
-/* ============ Recent meetings: instant clicks ============
-   The row slides away the moment you click and the save happens in the background.
-   If the save fails, the person comes back and a message says why. */
-function meetBy(email) { return S.meet.list.filter(function (y) { return y.email === email; })[0]; }
-function sortMeet() { S.meet.list.sort(function (a, b) { return b.date.localeCompare(a.date) || a.name.localeCompare(b.name); }); }
-function leaveRows(rows, done) {
-  rows.forEach(function (r) { r.classList.add('leaving'); });
-  setTimeout(function () {
-    rows.forEach(function (r) { if (r.parentNode) r.parentNode.removeChild(r); });
-    updateBadge();
-    if (done) done();
-  }, 300);
-}
-function drawIgnored() {
-  var box = $('#ignBox');
-  if (box) { box.innerHTML = ignHtml(); bindUnign(box); }
-}
-function bindUnign(root) {
-  root.querySelectorAll('[data-unign]').forEach(function (b) {
-    b.onclick = function () {
-      var kind = b.dataset.unign, val = b.dataset.v, key = kind === 'email' ? 'emails' : 'domains';
-      var i = S.meet.ignored[key].indexOf(val);
-      if (i >= 0) S.meet.ignored[key].splice(i, 1);
-      drawIgnored();
-      toast('Undone, finding them again…');
-      api('unignore', { kind: kind, value: val }).then(function () { return loadMeetings(); })
-        .catch(function (e) { if (S.meet.ignored[key].indexOf(val) < 0) S.meet.ignored[key].push(val); drawIgnored(); toast('Not saved: ' + e.message); });
-    };
+function askTier(c) {
+  return new Promise(res => {
+    const m = openModal(`<h3>Make ${esc(c.Name)} a client</h3><div>Brilliant. They move from Prospects to Clients. Which tier?</div>
+      <div class="row">${['A', 'B', 'C'].map(t => `<button class="btn btn-green" data-t="${t}">${t} tier</button>`).join('')}<button class="btn btn-plain" data-t="">Decide later</button></div>
+      <div class="acts"><button class="btn btn-plain" data-t="x">Cancel</button></div>`);
+    m.addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; closeModal(); res(b.dataset.t === 'x' ? null : b.dataset.t); });
+    $('#mScrim').addEventListener('click', () => { closeModal(); res(null); });
   });
 }
 
-/* ============ Events ============ */
-function bindIn(root) {
-  root.querySelectorAll('[data-open]').forEach(function (el) { el.onclick = function () { openDrawer(el.dataset.open); }; });
-  root.querySelectorAll('[data-touch]').forEach(function (b) {
-    b.onclick = function (ev) {
-      ev.stopPropagation();
-      var k = 'spoke', f = { 'Last contacted': todayYmd() };
-      var c = byId(b.dataset.id), before = Object.assign({}, c);
-      Object.assign(c, f); render();
-      api('touch', { id: b.dataset.id, kind: k }).then(function () { toast('Logged as spoke today'); })
-        .catch(function (e) { Object.assign(c, before); render(); toast('Not saved: ' + e.message); });
-    };
-  });
-  root.querySelectorAll('[data-archive]').forEach(function (b) {
-    b.onclick = function () {
-      var c = byId(b.dataset.archive); if (!c || !confirmArchive(c)) return;
-      S.clients = S.clients.filter(function (x) { return x !== c; }); S.archive.push(c); closeDrawer(); render();
-      api('archive', { id: c.ID }).then(function () { toast(c.Name + ' archived'); }).catch(function (e) { toast('Not archived: ' + e.message); loadAll(); });
-    };
+/* ============ events ============ */
+const ACT = {};
+document.addEventListener('click', e => {
+  const stop = e.target.closest('[data-stop]');
+  const t = e.target.closest('[data-go],[data-act],[data-open],[data-touch],[data-archive],[data-restore],[data-testi],[data-sortone],[data-sortall],[data-gt],[data-madd],[data-mign],[data-unign],[data-mscope],[data-coq],[data-type]');
+  if (!t || (stop && t.contains(stop) && t !== stop)) return;
+  const ds = t.dataset;
+  if (ds.go) { if (S.open) closeDrawer(true); go(ds.go); return; }
+  if (ds.act && ACT[ds.act]) { ACT[ds.act](t, e); return; }
+  if (ds.open) { openDrawer(ds.open); return; }
+  if (ds.touch) { e.stopPropagation(); spoke(ds.touch); return; }
+  if (ds.archive) { archive(ds.archive); return; }
+  if (ds.restore) { restore(t, ds.restore); return; }
+  if (ds.testi) { saveFields(ds.id, { Testimonial: ds.testi }, 'Testimonial: ' + ds.testi); return; }
+  if (ds.sortone) { setType([ds.id], ds.sortone); return; }
+  if (ds.sortall) { sortAll(ds.g, ds.sortall); return; }
+  if (ds.gt) { const same = S.cf.tier === ds.gt && S.cf.temp === ds.gp; S.cf.tier = same ? '' : ds.gt; S.cf.temp = same ? '' : ds.gp; renderView(); return; }
+  if (ds.madd) { meetAdd(t, ds.madd); return; }
+  if (ds.mign) { meetIgnore(ds.mign, ds.e); return; }
+  if (ds.unign) { unignore(ds.unign, ds.v); return; }
+  if (ds.mscope) { if (S.meet.scope !== ds.mscope) { S.meet.scope = ds.mscope; S.meet.loaded = false; renderView(); loadMeetings(); } return; }
+  if (ds.coq) { S.cf = { q: ds.coq }; go('everyone'); return; }
+  if (ds.type) { const d = $('#drawer'); if (!d) return; const inp = $('[data-f="Type"]', d); inp.value = inp.value === ds.type ? '' : ds.type; showByType(d, inp.value); markDirty(); return; }
+});
+document.addEventListener('input', e => {
+  const t = e.target;
+  if (t.closest('#drawer') && t.dataset.f) { markDirty(); if (t.dataset.f === 'Company') { const code = codeFor(t.value); $('#dCode').textContent = code ? 'Client code ' + code + ' (from BOARD)' : 'No client code yet'; } return; }
+  if (t.dataset.pf === 'q' || t.dataset.cf === 'q') {
+    (t.dataset.pf ? S.pf : S.cf).q = t.value; clearTimeout(t._t);
+    t._t = setTimeout(() => { const pos = t.selectionStart, key = t.dataset.pf ? '[data-pf="q"]' : '[data-cf="q"]'; renderView(); const n = $(key); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }, 250);
+    return;
+  }
+  if (t.id === 'archQ') { const q = norm(t.value); $$('[data-arow]').forEach(tr => { tr.style.display = tr.dataset.arow.includes(q) ? '' : 'none'; }); }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.closest('#drawer') && t.dataset.f) { markDirty(); return; }
+  if (t.dataset.pf && t.dataset.pf !== 'q') { S.pf[t.dataset.pf] = t.value; renderView(); return; }
+  if (t.dataset.cf && t.dataset.cf !== 'q') { S.cf[t.dataset.cf] = t.value; renderView(); return; }
+  if (t.dataset.pstat) { const c = byId(t.dataset.pstat); if (c) saveFields(c.ID, { 'Prospect status': t.value }, c.Name + ': ' + (t.value || 'no status')); return; }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('#modal')) closeModal(); else if (S.open) requestClose(); } });
+addEventListener('beforeunload', e => { if (S.dirty || S.inflight) { e.preventDefault(); e.returnValue = ''; } });
+
+ACT.signout = async () => { try { await api('logout'); } catch (e) {} signedOut('You have signed out.'); };
+ACT.mypass = () => myPass();
+ACT.mclose = () => closeModal();
+ACT.dclose = () => requestClose();
+ACT.dsave = () => saveDrawer();
+ACT.cfclear = () => { S.cf = {}; renderView(); };
+ACT.makeclient = async () => {
+  const c = byId(S.open); if (!c) return;
+  if (S.dirty && !await confirmBox('You have unsaved changes. Making them a client now saves only the type and tier. Carry on?', 'Carry on')) return;
+  const tier = await askTier(c); if (tier === null) return;
+  S.dirty = false;
+  saveFields(c.ID, Object.assign({ Type: 'Client' }, tier ? { Tier: tier } : {}), c.Name + ' is now a client');
+};
+ACT.addone = () => {
+  const base = readChoices('a'); if (!base) return;
+  const p = { Name: $('#aName').value.trim(), Company: $('#aCompany').value.trim(), 'Job Title': $('#aTitle').value.trim(), Email: emailIn($('#aEmail').value), LinkedIn: $('#aLi').value.trim() };
+  if (!p.Name) return toast('Add a name', true);
+  if (p.LinkedIn && !/^https?:\/\//i.test(p.LinkedIn)) p.LinkedIn = 'https://' + p.LinkedIn;
+  if (!p.Company && p.Email) p.Company = companyFromEmail(p.Email);
+  showPreview([p], base);
+};
+ACT.addlist = () => {
+  const base = readChoices('l'); if (!base) return;
+  const list = parseList($('#aList').value); if (!list.length) return toast('Nothing to add', true);
+  showPreview(list, base);
+};
+ACT.addconfirm = async el => {
+  const rows = pending.filter((p, i) => { const cb = $(`[data-pick="${i}"]`); return cb && cb.checked; });
+  if (!rows.length) return toast('Nobody ticked', true);
+  el.disabled = true; el.textContent = 'Adding';
+  try {
+    const r = await write('add', { rows });
+    S.contacts = S.contacts.concat(r.added || []);
+    (r.skipped || []).forEach(s => toast(s.name + ' was not added: ' + s.why, true));
+    toast('Added ' + (r.added || []).length);
+    pending = [];
+    const first = (r.added || [])[0];
+    go(first && first.Type === 'Client' ? 'everyone' : 'prospects');
+  } catch (e) { el.disabled = false; el.textContent = 'Add ticked people'; toast('Not added: ' + e.message, true); }
+};
+
+function spoke(id) {
+  const c = byId(id); if (!c) return;
+  const before = Object.assign({}, c); c['Last contacted'] = todayYmd(); renderView(); if (S.open === id && !S.dirty) openDrawer(id, true);
+  write('touch', { id }).then(d => { if (d && d.contact) Object.assign(c, d.contact); toast('Logged: spoke to ' + c.Name + ' today'); })
+    .catch(e => { Object.assign(c, before); renderView(); toast('Not saved: ' + e.message, true); });
+}
+async function archive(id) {
+  const c = byId(id); if (!c) return;
+  if (!await confirmBox(`Move ${c.Name} to the Archive? You can restore them later.`, 'Archive')) return;
+  const row = $(`[data-srow="${CSS.escape(id)}"]`);
+  S.contacts = S.contacts.filter(x => x !== c); S.archive.push(c); closeDrawer(true);
+  if (row) leaveRows([row]); else renderView();
+  write('archive', { id }).then(() => toast(c.Name + ' archived')).catch(e => { S.archive = S.archive.filter(x => x !== c); S.contacts.push(c); renderView(); toast('Not archived: ' + e.message, true); });
+}
+function restore(btn, id) {
+  btn.disabled = true;
+  write('restore', { id }).then(d => {
+    const c = S.archive.find(x => x.ID === id); S.archive = S.archive.filter(x => x.ID !== id);
+    S.contacts.push(Object.assign({}, c, d.contact || {})); renderView(); toast('Restored');
+  }).catch(e => { btn.disabled = false; toast('Not restored: ' + e.message, true); });
+}
+function sortAll(g, type) {
+  const ids = unsorted().filter(c => (c['Old group'] || 'No group') === g).map(c => c.ID);
+  confirmBox(`Mark all ${ids.length} people in "${g}" as ${type.toLowerCase()}s? You can still change anyone afterwards.`, `Yes, all ${ids.length}`).then(ok => {
+    if (!ok) return;
+    const grp = $(`[data-sgrp="${CSS.escape(g)}"]`);
+    if (grp) grp.classList.add('leaving');
+    setType(ids, type);
   });
 }
-function confirmArchive(c) { return window.confirm('Move ' + c.Name + ' to the Archive? You can restore them later.'); }
 
-function bindView() {
-  var v = $('#view');
-  bindIn(v);
-  v.querySelectorAll('[data-gt]').forEach(function (el) {
-    el.onclick = function () {
-      var same = S.filter.tier === el.dataset.gt && S.filter.temp === el.dataset.gp;
-      S.filter.tier = same ? '' : el.dataset.gt; S.filter.temp = same ? '' : el.dataset.gp; render();
-    };
-  });
-  var fmap = { '#ftier': 'tier', '#ftemp': 'temp', '#fgroup': 'group', '#fowner': 'owner', '#fstatus': 'status' };
-  Object.keys(fmap).forEach(function (s) { var el = $(s); if (el) el.onchange = function () { S.filter[fmap[s]] = el.value; render(); }; });
-  var fq = $('#fq');
-  if (fq) fq.oninput = function () {
-    S.filter.q = fq.value; clearTimeout(fq.t);
-    fq.t = setTimeout(function () { var pos = fq.selectionStart; render(); var n = $('#fq'); n.focus(); n.setSelectionRange(pos, pos); }, 250);
-  };
-  if ($('#fclear')) $('#fclear').onclick = function () { S.filter = {}; render(); };
-  v.querySelectorAll('[data-testi]').forEach(function (b) {
-    b.onclick = function () { saveFields(b.dataset.id, { Testimonial: b.dataset.testi }, 'Testimonial: ' + b.dataset.testi); };
-  });
-  v.querySelectorAll('[data-sort-save]').forEach(function (b) {
-    b.onclick = function () {
-      var id = b.dataset.sortSave, t = v.querySelector('[data-sort-tier="' + id + '"]').value, g = v.querySelector('[data-sort-group="' + id + '"]').value;
-      if (!g) return toast('Pick a group first');
-      var f = { Group: g }; if (t) f.Tier = t;
-      saveFields(id, f, 'Sorted');
-    };
-  });
-
-  /* Add from Recent meetings: row leaves at once, save runs in the background */
-  v.querySelectorAll('[data-m-add]').forEach(function (b) {
-    b.onclick = function () {
-      var x = meetBy(b.dataset.e), row = b.closest('[data-m-row]');
-      if (!x || !row || row.classList.contains('leaving')) return;
-      var name = row.querySelector('[data-m-name]').value.trim(), g = row.querySelector('[data-m-group]');
-      if (!name) return toast('Add a name');
-      if (!g.value) { g.focus(); g.style.borderColor = 'var(--pink)'; return toast('Pick a group first'); }
-      var r = { Name: name, Company: row.querySelector('[data-m-co]').value.trim(), Email: x.email, 'Last contacted': x.date, Group: g.value };
-      var t = row.querySelector('[data-m-tier]').value; if (t) r.Tier = t;
-      S.meet.list = S.meet.list.filter(function (y) { return y !== x; });
-      leaveRows([row], function () { if (!S.meet.list.length) render(); });
-      toast('Adding ' + name + '…');
-      api('add', { rows: [r] }).then(function (res) {
-        if (!res.added || !res.added.length) throw new Error('Nothing was added');
-        S.clients.push(Object.assign({}, r, { ID: res.added[0] }));
-        updateBadge();
-        toast(name + ' added');
-      }).catch(function (e) {
-        S.meet.list.push(x); sortMeet(); render();
-        toast('Not added: ' + e.message);
-      });
-    };
-  });
-  v.querySelectorAll('[data-co-q]').forEach(function (el) {
-    el.onclick = function () { S.filter = { q: el.dataset.coQ }; S.view = 'everyone'; render(); window.scrollTo(0, 0); };
-  });
-
-  /* Not relevant: same idea, instant */
-  v.querySelectorAll('[data-m-ign]').forEach(function (b) {
-    b.onclick = function () {
-      var kind = b.dataset.mIgn, x = meetBy(b.dataset.e);
-      if (!x) return;
-      var value = kind === 'email' ? x.email : x.domain, key = kind === 'email' ? 'emails' : 'domains';
-      var gone = S.meet.list.filter(function (y) { return kind === 'email' ? y.email === value : y.domain === value; });
-      var had = S.meet.ignored[key].indexOf(value) >= 0;
-      if (!had) S.meet.ignored[key].push(value);
-      S.meet.list = S.meet.list.filter(function (y) { return gone.indexOf(y) < 0; });
-      var set = {}; gone.forEach(function (y) { set[y.email] = true; });
-      var rows = Array.prototype.filter.call(v.querySelectorAll('[data-m-row]'), function (r) { return set[r.dataset.mRow]; });
-      leaveRows(rows, function () { drawIgnored(); if (!S.meet.list.length) render(); });
-      toast('Ignored ' + (kind === 'email' ? x.name : 'everyone at ' + value) + (kind === 'domain' && gone.length > 1 ? ' (' + gone.length + ' people)' : ''));
-      api('ignore', { kind: kind, value: value }).catch(function (e) {
-        if (!had) { var i = S.meet.ignored[key].indexOf(value); if (i >= 0) S.meet.ignored[key].splice(i, 1); }
-        S.meet.list = S.meet.list.concat(gone); sortMeet(); render();
-        toast('Not saved: ' + e.message);
-      });
-    };
-  });
-  bindUnign(v);
-  v.querySelectorAll('[data-restore]').forEach(function (b) {
-    b.onclick = function () {
-      b.disabled = true;
-      api('restore', { id: b.dataset.restore }).then(function () { toast('Restored'); return loadAll(); }).catch(function (e) { b.disabled = false; toast('Not restored: ' + e.message); });
-    };
-  });
-  if ($('#archQ')) $('#archQ').oninput = function () {
-    var q = this.value.toLowerCase();
-    v.querySelectorAll('[data-arch-row]').forEach(function (tr) { tr.style.display = tr.dataset.archRow.indexOf(q) >= 0 ? '' : 'none'; });
-  };
-  if ($('#addOneCheck')) $('#addOneCheck').onclick = function () {
-    var p = { Name: $('#aName').value.trim(), Company: $('#aCompany').value.trim(), 'Job Title': $('#aTitle').value.trim(), Email: emailIn($('#aEmail').value), LinkedIn: $('#aLi').value.trim() };
-    if (!p.Name) return toast('Add a name');
-    if (!p.Company && p.Email) p.Company = companyFromEmail(p.Email);
-    showPreview([p]);
-  };
-  if ($('#addListCheck')) $('#addListCheck').onclick = function () {
-    var list = parseList($('#aList').value);
-    if (!list.length) return toast('Nothing to add');
-    showPreview(list);
-  };
+/* Recent meetings: the row slides away the moment you click, and the save runs in the background. If it fails, the person comes back. */
+function meetAdd(btn, email) {
+  const x = meetBy(email), row = btn.closest('[data-mrow]'); if (!x || !row || row.classList.contains('leaving')) return;
+  const name = $('[data-mname]', row).value.trim(), as = $('[data-mas]', row), f = addAsFields(as.value);
+  if (!name) return toast('Add a name', true);
+  if (!f) { as.focus(); as.style.outline = '2px solid var(--pink)'; return toast('Choose prospect or client first', true); }
+  const r = Object.assign(f, { Name: name, Company: $('[data-mco]', row).value.trim(), Email: x.email, 'Last contacted': x.date, Owner: $('[data-mown]', row).value, 'Lead source': $('[data-mlead]', row).value, 'Met by': (x.metBy || []).join(',') });
+  S.meet.list = S.meet.list.filter(y => y !== x);
+  leaveRows([row], () => { if (!S.meet.list.length) renderView(); });
+  toast('Adding ' + name);
+  write('add', { rows: [r] }).then(res => {
+    if (res.skipped && res.skipped.length) throw new Error(res.skipped[0].why);
+    if (!res.added || !res.added.length) throw new Error('Nothing was added');
+    S.contacts = S.contacts.concat(res.added); updateCounts(); toast(name + ' added as a ' + (f.Type === 'Client' ? 'client' : 'prospect'));
+  }).catch(e => { S.meet.list.push(x); sortMeet(); renderView(); toast('Not added: ' + e.message, true); });
 }
-document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(); });
+function meetIgnore(kind, email) {
+  const x = meetBy(email); if (!x) return;
+  const value = kind === 'email' ? x.email : x.domain, key = kind === 'email' ? 'emails' : 'domains';
+  const gone = S.meet.list.filter(y => (kind === 'email' ? y.email === value : y.domain === value)), had = S.meet.ignored[key].includes(value);
+  if (!had) S.meet.ignored[key].push(value);
+  S.meet.list = S.meet.list.filter(y => !gone.includes(y));
+  const set = new Set(gone.map(y => y.email)), rows = $$('[data-mrow]').filter(r => set.has(r.dataset.mrow));
+  leaveRows(rows, () => { const b = $('#ignBox'); if (b) b.innerHTML = ignHtml(); if (!S.meet.list.length) renderView(); });
+  toast('Ignored ' + (kind === 'email' ? x.name : 'everyone at ' + value));
+  write('ignore', { kind, value }).catch(e => {
+    if (!had) S.meet.ignored[key] = S.meet.ignored[key].filter(v => v !== value);
+    S.meet.list = S.meet.list.concat(gone); sortMeet(); renderView(); toast('Not saved: ' + e.message, true);
+  });
+}
+function unignore(kind, value) {
+  const key = kind === 'email' ? 'emails' : 'domains';
+  S.meet.ignored[key] = S.meet.ignored[key].filter(v => v !== value);
+  const b = $('#ignBox'); if (b) b.innerHTML = ignHtml();
+  toast('Undone, finding them again');
+  write('unignore', { kind, value }).then(() => loadMeetings()).catch(e => { S.meet.ignored[key].push(value); if ($('#ignBox')) $('#ignBox').innerHTML = ignHtml(); toast('Not saved: ' + e.message, true); });
+}
 
-/* ============ Start ============ */
-(function () {
-  var u = load('cr_url'), t = load('cr_token');
-  $('#inUrl').value = u;
-  if (u && t) unlock(u, t);
+boot();
 })();
 </script>
 </body>
