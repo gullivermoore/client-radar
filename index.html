@@ -231,6 +231,38 @@ details.co .tbl-wrap { border: 0; border-radius: 0; }
 .check { display: flex; align-items: center; gap: 9px; font-size: 13px; cursor: pointer; }
 .check input { accent-color: var(--pink); width: 16px; height: 16px; }
 
+/* ---------- Hyperfocus mode: deep space, a warp jump on entry, then a slow star drift ---------- */
+#hfSky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0; transition: opacity .7s ease; background: radial-gradient(ellipse at 50% 42%, #1d1236 0%, #0a0918 55%, #05050c 100%); }
+#app { z-index: 1; }
+.hf-btn .hf-sw { margin-left: auto; width: 32px; height: 18px; border-radius: var(--r-pill); background: var(--grey-2); position: relative; flex: none; transition: background .2s; }
+.hf-btn .hf-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.25); transition: transform .2s; }
+.hf-ico { font-size: 14px; color: var(--pink); }
+body.hyper { background: #05050c; color-scheme: dark;
+  --white: rgba(23,20,42,.9); --grey: rgba(13,12,28,.72); --grey-2: rgba(255,255,255,.1); --black: #F2EEF8; --line: rgba(255,255,255,.12); --muted: #A7A1BF;
+  --pink-soft: rgba(255,80,190,.16); --pink-mid: rgba(255,80,190,.42); --green-soft: rgba(31,157,92,.2); --green-mid: rgba(31,157,92,.5); }
+body.hyper #hfSky { opacity: 1; }
+body.hyper[data-area="n"], .hyper [data-area="n"] { --a: #2C2556; --a-soft: rgba(255,255,255,.06); --a-mid: rgba(255,255,255,.16); --a-ink: #fff; }
+body.hyper[data-area="p"], .hyper [data-area="p"] { --a-ink: #111; }
+.hyper .hf-btn .hf-sw { background: var(--pink); } .hyper .hf-btn .hf-sw::after { transform: translateX(14px); }
+.hyper .btn-pink, .hyper .nav-item.on.p, .hyper .ps-Hot, .hyper .beta, .hyper .typeseg button.on.p { color: #111; }
+.hyper .nav-item.on.n, .hyper .ps-Meetingbooked, .hyper .toast:not(.bad) { background: #F2EEF8; color: #111; }
+.hyper .nav-item.on .n { color: #111; }
+.hyper .band-note .ic { background: var(--pink); color: #111; }
+.hyper .tier, .hyper .type-Client { color: #8BE6B1; }
+.hyper .notice.warn { background: rgba(217,138,18,.15); border-color: rgba(217,138,18,.5); }
+.hyper .av { box-shadow: 0 0 0 1.5px rgba(255,255,255,.28); }
+.hyper .side, .hyper .topbar, .hyper .toolbar { -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.hyper .topbar, .hyper .toolbar { background: rgba(5,5,12,.55); }
+.hyper .band::after { background: rgba(255,255,255,.08); }
+.hyper .k-card:hover { box-shadow: 0 0 0 1px var(--pink-mid), 0 10px 34px rgba(255,80,190,.2); }
+.hyper .drawer, .hyper .modal { background: #141128; }
+.hyper .brand-logo { filter: drop-shadow(0 0 10px rgba(255,80,190,.55)); }
+/* no murky pinks on the dark background: light pink tints become outlines instead */
+.hyper .btn[disabled] { opacity: 1; background: rgba(255,255,255,.08); color: var(--muted); box-shadow: none; }
+.hyper .btn-soft { background: rgba(255,255,255,.1); color: #fff; }
+.hyper .ps-Warm, .hyper .type-Prospect { background: transparent; color: var(--pink); box-shadow: inset 0 0 0 1.5px var(--pink); }
+.hyper .scrim { background: rgba(5,5,12,.45); }
+
 @media (max-width: 860px) {
   #app { flex-direction: column; }
   .side { width: 100%; flex-direction: row; align-items: center; padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px)); gap: 4px; overflow-x: auto; overflow-y: hidden; border-right: 0; border-top: 1px solid var(--line); order: 2; }
@@ -262,7 +294,7 @@ details.co .tbl-wrap { border: 0; border-radius: 0; }
 /* ---- CONFIG: paste the Apps Script web app URL between the quotes ---- */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzF5sjSS2iCKAw3-5DBWZ6AeXRYfwSa22M8j1Dpe3pt7ndfYZ85IDNA7eim4R48jRXlwA/exec';
 /* ---------------------------------------------------------------------- */
-const APP_VERSION = '2.2.0';
+const APP_VERSION = '2.3.0';
 const LOGO = `<span class="brand-logo" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#242424"/><circle cx="32" cy="32" r="25" fill="none" stroke="#FF50BE" stroke-opacity=".3" stroke-width="1.5"/><circle cx="32" cy="32" r="18.5" fill="none" stroke="#FF50BE" stroke-opacity=".18" stroke-width="1.5"/><g transform="rotate(-24 32 32)"><path d="M7 32A25 8 0 0 1 57 32" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="32" r="13" fill="#FF50BE"/><path d="M7 32A25 8 0 0 0 57 32" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></g><circle cx="50" cy="13" r="2" fill="#fff"/><circle cx="13" cy="49" r="1.4" fill="#fff" fill-opacity=".8"/><circle cx="54" cy="44" r="1.2" fill="#FF50BE"/></svg></span>`;
 const POLL_MS = 20000;
 const THRESH = { A: [30, 90], B: [60, 150], C: [120, 365] };
@@ -463,7 +495,7 @@ function signedOut(msg) { S.token = ''; S.me = null; store.del('cr2_token'); clo
 function showLogin(msg) {
   $('#app').innerHTML = `<div class="login">
     <div class="lg-left"><div class="brand">${LOGO}<span>Client Radar<span class="beta">BETA</span></span></div>
-      <div class="lg-hero">Every relationship,<br>one <em>radar</em>.</div>
+      <div class="lg-hero">Trust the process,<br>and small blips<br>become <em>big clients</em></div>
       <div class="lg-keys"><span style="background:var(--pink);color:var(--black)">Prospects</span><span style="background:var(--green);color:#fff">Clients</span></div></div>
     <div class="lg-right"><form class="lg-form" id="lgForm" autocomplete="on">
       <h2>Sign in</h2>
@@ -476,6 +508,7 @@ function showLogin(msg) {
       <button class="btn btn-pink" type="submit" id="lgBtn">Sign in</button>
     </form></div></div>`;
   document.body.removeAttribute('data-area');
+  hyper(false, true, true);
   $('#lgForm').addEventListener('submit', async e => {
     e.preventDefault();
     const err = $('#lgErr'), btn = $('#lgBtn'), name = $('#lgName').value.trim(), pass = $('#lgPass').value;
@@ -522,7 +555,8 @@ const VIEWS = {
   archive: { t: 'Archive', a: 'n', fn: () => vArchive() }
 };
 function renderShell() {
-  const item = (v, cnt) => `<button class="nav-item ${VIEWS[v].a}" data-go="${v}">${esc(VIEWS[v].t)}${cnt != null ? `<span class="n" data-count="${v}">${cnt}</span>` : ''}</button>`;
+  const keys = Object.keys(VIEWS);
+  const item = (v, cnt) => `<button class="nav-item ${VIEWS[v].a}" data-go="${v}" title="Shortcut: press ${keys.indexOf(v) + 1}">${esc(VIEWS[v].t)}${cnt != null ? `<span class="n" data-count="${v}">${cnt}</span>` : ''}</button>`;
   $('#app').innerHTML = `
     <nav class="side">
       <div class="brand">${LOGO}<span>Client Radar<span class="beta">BETA</span><small>Sunday Treat</small></span></div>
@@ -531,6 +565,7 @@ function renderShell() {
       <div class="nav-group n"><i></i>Tools</div>${item('sort', 0)}${item('meetings', 0)}${item('add')}${item('archive')}
       <div class="side-foot">
         <div class="userchip">${av(S.me.id, 'av-lg')}<div><div class="nm">${esc(S.me.name)}</div><div class="small muted">Signed in</div></div></div>
+        <button class="nav-item n hf-btn" data-act="hyper" title="Shortcut: press H"><span class="hf-ico">&#10022;</span>Hyperfocus<span class="hf-sw"></span></button>
         <button class="nav-item n" data-act="mypass">Change my passcode</button>
         <button class="nav-item n" data-act="signout">Sign out</button>
         <div class="ver">Client Radar ${APP_VERSION}</div>
@@ -541,6 +576,7 @@ function renderShell() {
       <div class="content" id="content"></div>
     </div>${codeList()}`;
   setSync(S.sync);
+  hyper(store.get('cr2_hyper') === '1', true);
 }
 function updateCounts() {
   const c = { prospects: prospects().length, today: queue().length, everyone: clients().length, sort: unsorted().length, meetings: S.meet.list.length };
@@ -1010,9 +1046,20 @@ document.addEventListener('change', e => {
   if (t.dataset.cf && t.dataset.cf !== 'q') { S.cf[t.dataset.cf] = t.value; renderView(); return; }
   if (t.dataset.pstat) { const c = byId(t.dataset.pstat); if (c) saveFields(c.ID, { 'Prospect status': t.value }, c.Name + ': ' + (t.value || 'no status')); return; }
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('#modal')) closeModal(); else if (S.open) requestClose(); } });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { if ($('#modal')) closeModal(); else if (S.open) requestClose(); return; }
+  /* Shortcuts: 1 to 9 open the pages in sidebar order, H turns Hyperfocus on or off */
+  if (!S.me || e.metaKey || e.ctrlKey || e.altKey || typing() || $('#modal')) return;
+  const keys = Object.keys(VIEWS), n = parseInt(e.key, 10);
+  if (n >= 1 && n <= keys.length) {
+    if (S.open) { if (S.dirty) return toast('Save or close the open contact first', true); closeDrawer(true); }
+    e.preventDefault(); go(keys[n - 1]); return;
+  }
+  if (e.key === 'h' || e.key === 'H') { e.preventDefault(); hyper(!HF.on); }
+});
 addEventListener('beforeunload', e => { if (S.dirty || S.inflight) { e.preventDefault(); e.returnValue = ''; } });
 
+ACT.hyper = () => hyper(!HF.on);
 ACT.signout = async () => { try { await api('logout'); } catch (e) {} signedOut('You have signed out.'); };
 ACT.mypass = () => myPass();
 ACT.mclose = () => closeModal();
@@ -1121,6 +1168,64 @@ function unignore(kind, value) {
   const b = $('#ignBox'); if (b) b.innerHTML = ignHtml();
   toast('Undone, finding them again');
   write('unignore', { kind, value }).then(() => loadMeetings()).catch(e => { S.meet.ignored[key].push(value); if ($('#ignBox')) $('#ignBox').innerHTML = ignHtml(); toast('Not saved: ' + e.message, true); });
+}
+
+/* ============ Hyperfocus mode ============
+   A canvas of stars behind the app. Turning it on does a short warp jump (stars stretch into streaks),
+   then settles into a slow drift. Calm motion only; with "reduce motion" switched on, the stars stay still.
+   The setting is remembered on this device. */
+const HF = { on: false, cv: null, cx: null, stars: [], speed: 0, target: 0, raf: 0, w: 0, h: 0, dpr: 1, until: 0 };
+const CRUISE = 1.1, WARP = 48;
+const stillMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function hfSetup() {
+  if (HF.cv) return;
+  HF.cv = document.createElement('canvas'); HF.cv.id = 'hfSky'; HF.cv.setAttribute('aria-hidden', 'true');
+  document.body.insertBefore(HF.cv, document.body.firstChild);
+  HF.cx = HF.cv.getContext('2d');
+  addEventListener('resize', () => { if (HF.on) { hfSize(); if (stillMotion()) hfDraw(); } });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && HF.on && !HF.raf) hfLoop(); });
+}
+function hfSize() {
+  HF.dpr = Math.min(2, window.devicePixelRatio || 1); HF.w = innerWidth; HF.h = innerHeight;
+  HF.cv.width = HF.w * HF.dpr; HF.cv.height = HF.h * HF.dpr; HF.cx.setTransform(HF.dpr, 0, 0, HF.dpr, 0, 0);
+  const n = Math.round(Math.min(520, Math.max(140, HF.w * HF.h / 2600))), D = Math.max(HF.w, HF.h);
+  HF.stars = Array.from({ length: n }, () => hfStar(D, Math.random() * D));
+}
+function hfStar(D, z) { return { x: (Math.random() * 2 - 1) * D, y: (Math.random() * 2 - 1) * D, z, pz: z, pink: Math.random() < 0.14 }; }
+function hfDraw() {
+  const c = HF.cx, W = HF.w, H = HF.h, D = Math.max(W, H), mx = W / 2, my = H / 2, f = D * 0.45;
+  c.clearRect(0, 0, W, H);
+  for (const s of HF.stars) {
+    s.pz = s.z; s.z -= HF.speed;
+    if (s.z < 1) { Object.assign(s, hfStar(D, D)); continue; }
+    const sx = mx + s.x * f / s.z, sy = my + s.y * f / s.z;
+    if (sx < -50 || sx > W + 50 || sy < -50 || sy > H + 50) { Object.assign(s, hfStar(D, D)); continue; }
+    const px = mx + s.x * f / s.pz, py = my + s.y * f / s.pz, near = 1 - s.z / D;
+    c.strokeStyle = s.pink ? `rgba(255,80,190,${0.35 + near * 0.65})` : `rgba(255,255,255,${0.25 + near * 0.75})`;
+    c.lineWidth = 0.4 + near * 2.2; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(px, py); c.lineTo(HF.speed < 2 ? sx + 0.1 : sx, sy); c.stroke();
+  }
+}
+function hfLoop() {
+  HF.raf = 0;
+  if (document.hidden) return;
+  if (HF.until && performance.now() > HF.until) { HF.until = 0; HF.target = HF.on ? CRUISE : 0; }
+  HF.speed += (HF.target - HF.speed) * (HF.target > HF.speed ? 0.08 : 0.035);
+  hfDraw();
+  if (HF.on || HF.speed > 0.05) HF.raf = requestAnimationFrame(hfLoop);
+}
+function hyper(on, quiet, noSave) {
+  hfSetup();
+  HF.on = !!on;
+  document.body.classList.toggle('hyper', HF.on);
+  if (!noSave) store.set('cr2_hyper', HF.on ? '1' : '0');
+  if (HF.raf) { cancelAnimationFrame(HF.raf); HF.raf = 0; }
+  if (!HF.on) { HF.target = 0; HF.until = 0; setTimeout(() => { if (!HF.on && HF.cx) HF.cx.clearRect(0, 0, HF.w, HF.h); }, 800); return; }
+  hfSize();
+  if (stillMotion()) { HF.speed = 0; hfDraw(); return; }
+  if (quiet) { HF.speed = CRUISE; HF.target = CRUISE; }
+  else { HF.speed = 0.2; HF.target = WARP; HF.until = performance.now() + 900; toast('Hyperfocus on. Press H to come back down.'); }
+  hfLoop();
 }
 
 boot();
