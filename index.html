@@ -294,7 +294,7 @@ body.hyper[data-area="p"], .hyper [data-area="p"] { --a-ink: #111; }
 /* ---- CONFIG: paste the Apps Script web app URL between the quotes ---- */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzF5sjSS2iCKAw3-5DBWZ6AeXRYfwSa22M8j1Dpe3pt7ndfYZ85IDNA7eim4R48jRXlwA/exec';
 /* ---------------------------------------------------------------------- */
-const APP_VERSION = '2.3.0';
+const APP_VERSION = '2.3.1';
 const LOGO = `<span class="brand-logo" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#242424"/><circle cx="32" cy="32" r="25" fill="none" stroke="#FF50BE" stroke-opacity=".3" stroke-width="1.5"/><circle cx="32" cy="32" r="18.5" fill="none" stroke="#FF50BE" stroke-opacity=".18" stroke-width="1.5"/><g transform="rotate(-24 32 32)"><path d="M7 32A25 8 0 0 1 57 32" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="32" r="13" fill="#FF50BE"/><path d="M7 32A25 8 0 0 0 57 32" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></g><circle cx="50" cy="13" r="2" fill="#fff"/><circle cx="13" cy="49" r="1.4" fill="#fff" fill-opacity=".8"/><circle cx="54" cy="44" r="1.2" fill="#FF50BE"/></svg></span>`;
 const POLL_MS = 20000;
 const THRESH = { A: [30, 90], B: [60, 150], C: [120, 365] };
@@ -391,7 +391,7 @@ const tierTag = c => (tierOf(c) ? `<span class="tier">${tierOf(c)}</span>` : '<s
 const liLink = c => (c.LinkedIn && /^https?:\/\//i.test(c.LinkedIn) ? `<a class="li" href="${esc(c.LinkedIn)}" target="_blank" rel="noopener noreferrer" title="Open LinkedIn" data-stop>in</a>` : '');
 const PS_COL = { 'Meeting booked': '#242424', Hot: '#FF50BE', Warm: '#FFC2E7', Cold: '#5B6B8C', '': '#ECE9EA' };
 
-/* Today: Clients only, A and B tier, skips Leave For Now, top 10 */
+/* Today: Clients only, A and B tier, skips Leave For Now, top 4 */
 function queue() {
   const out = [];
   clients().forEach(c => {
@@ -403,7 +403,7 @@ function queue() {
     out.push({ c, score: quiet * (t === 'A' ? 1.5 : 1) + (owe ? 5 : 0) + Math.min(ch, 4) * 0.5 });
   });
   out.sort((a, b) => b.score - a.score);
-  return out.slice(0, 10).map(x => x.c);
+  return out.slice(0, 4).map(x => x.c);
 }
 function reason(c) {
   const bits = [tierOf(c) + ' tier'], n = daysSince(effective(c).date), ch = chases(c);
