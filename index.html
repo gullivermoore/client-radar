@@ -294,7 +294,7 @@ body.hyper[data-area="p"], .hyper [data-area="p"] { --a-ink: #111; }
 /* ---- CONFIG: paste the Apps Script web app URL between the quotes ---- */
 const API_URL = 'https://script.google.com/macros/s/AKfycbzF5sjSS2iCKAw3-5DBWZ6AeXRYfwSa22M8j1Dpe3pt7ndfYZ85IDNA7eim4R48jRXlwA/exec';
 /* ---------------------------------------------------------------------- */
-const APP_VERSION = '2.3.1';
+const APP_VERSION = '2.3.2';
 const LOGO = `<span class="brand-logo" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="#242424"/><circle cx="32" cy="32" r="25" fill="none" stroke="#FF50BE" stroke-opacity=".3" stroke-width="1.5"/><circle cx="32" cy="32" r="18.5" fill="none" stroke="#FF50BE" stroke-opacity=".18" stroke-width="1.5"/><g transform="rotate(-24 32 32)"><path d="M7 32A25 8 0 0 1 57 32" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="32" r="13" fill="#FF50BE"/><path d="M7 32A25 8 0 0 0 57 32" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></g><circle cx="50" cy="13" r="2" fill="#fff"/><circle cx="13" cy="49" r="1.4" fill="#fff" fill-opacity=".8"/><circle cx="54" cy="44" r="1.2" fill="#FF50BE"/></svg></span>`;
 const POLL_MS = 20000;
 const THRESH = { A: [30, 90], B: [60, 150], C: [120, 365] };
@@ -588,7 +588,9 @@ function route() {
   if (!S.me) return;
   let v = location.hash.replace(/^#\/?/, '').split('/')[0];
   if (!VIEWS[v]) v = 'prospects';
-  S.view = v; renderView();
+  S.view = v;
+  if (v === 'meetings') loadMeetings();   /* read the calendar afresh every time the page is opened */
+  renderView();
   const c = $('#content'); if (c) c.scrollTop = 0;
 }
 addEventListener('hashchange', route);
@@ -743,12 +745,17 @@ function leaveRows(rows, done) {
 
 /* ============ Recent meetings ============ */
 async function loadMeetings() {
-  if (S.meet.loading) return; S.meet.loading = true;
+  if (S.meet.loading) { S.meet.again = true; return; }
+  S.meet.loading = true; S.meet.again = false; S.meet.err = '';
+  const scope = S.meet.scope;
   try {
-    const d = await api('meetings', { scope: S.meet.scope });
+    await chain;   /* let saves finish first, so people just added or ignored do not come back */
+    const d = await api('meetings', { scope });
     Object.assign(S.meet, { list: d.list || [], ignored: d.ignored || { emails: [], domains: [] }, days: d.days, problems: d.problems || [], err: '', loaded: true });
   } catch (e) { S.meet.err = e.message; S.meet.loaded = true; }
   S.meet.loading = false;
+  /* asked again while reading: only needed if the scope or the ignored list changed */
+  if (S.meet.again && (S.meet.scope !== scope || S.meet.stale)) { S.meet.stale = false; return loadMeetings(); }
   if (S.view === 'meetings' && !typing()) renderView(); else updateCounts();
 }
 function addAsFields(v) {
@@ -774,7 +781,7 @@ function ignHtml() {
 function vMeetings() {
   const m = S.meet, many = S.people.filter(p => p.calendar).length > 1;
   let h = band('Tools', 'Recent meetings', `External people from ${m.scope === 'all' ? 'everyone\'s calendars' : 'your calendar'} in the last ${m.days} days who are not on the radar or in the Archive. Nothing is saved until you press Add.`) + '<div class="pad">';
-  if (many) h += `<div class="row" style="margin-bottom:14px"><div class="seg"><button class="${m.scope === 'mine' ? 'on' : ''}" data-mscope="mine">My meetings</button><button class="${m.scope === 'all' ? 'on' : ''}" data-mscope="all">Everyone's meetings</button></div></div>`;
+  h += `<div class="row" style="margin-bottom:14px">${many ? `<div class="seg"><button class="${m.scope === 'mine' ? 'on' : ''}" data-mscope="mine">My meetings</button><button class="${m.scope === 'all' ? 'on' : ''}" data-mscope="all">Everyone's meetings</button></div>` : ''}<span class="grow"></span><button class="btn btn-plain btn-sm" data-act="mrefresh"${m.loading ? ' disabled' : ''}>Refresh</button></div>`;
   m.problems.forEach(p => { h += `<div class="notice warn">${esc(p)}</div>`; });
   if (m.err) h += `<div class="notice warn"><div><b>Could not read the calendar.</b><br>${esc(m.err)}<div class="small" style="margin-top:6px">If this is the first time, open Apps Script, run <b>authorize</b>, then Deploy, Manage deployments, pencil, New version, Deploy.</div></div></div>`;
   else if (!m.loaded || m.loading) h += '<div class="empty">Reading the calendar</div>';
@@ -1066,6 +1073,7 @@ ACT.mclose = () => closeModal();
 ACT.dclose = () => requestClose();
 ACT.dsave = () => saveDrawer();
 ACT.cfclear = () => { S.cf = {}; renderView(); };
+ACT.mrefresh = () => { loadMeetings(); renderView(); };
 ACT.makeclient = async () => {
   const c = byId(S.open); if (!c) return;
   if (S.dirty && !await confirmBox('You have unsaved changes. Making them a client now saves only the type and tier. Carry on?', 'Carry on')) return;
@@ -1167,7 +1175,7 @@ function unignore(kind, value) {
   S.meet.ignored[key] = S.meet.ignored[key].filter(v => v !== value);
   const b = $('#ignBox'); if (b) b.innerHTML = ignHtml();
   toast('Undone, finding them again');
-  write('unignore', { kind, value }).then(() => loadMeetings()).catch(e => { S.meet.ignored[key].push(value); if ($('#ignBox')) $('#ignBox').innerHTML = ignHtml(); toast('Not saved: ' + e.message, true); });
+  write('unignore', { kind, value }).then(() => { S.meet.stale = true; loadMeetings(); }).catch(e => { S.meet.ignored[key].push(value); if ($('#ignBox')) $('#ignBox').innerHTML = ignHtml(); toast('Not saved: ' + e.message, true); });
 }
 
 /* ============ Hyperfocus mode ============
